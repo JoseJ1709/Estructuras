@@ -1,42 +1,35 @@
+/*
+  Estructura de Datos - Proyecto de clase
+- Jose Andres Jaramillo- Juan Camilo Gomez
+  Universidad Javeriana - Tercer periodo 2023
+*/
+
 #include "tarjeta.h"
 
-// Constructor de la clase Tarjeta con territorio asociado
-Tarjeta::Tarjeta(string t, Territorio* te, int e) {
-  tipo = t;
-  territorio = te;
-  unidadesDeEjercito_tarjeta = e;
-  utilizada = false; // Inicializa como no utilizada
+Territorio::Territorio() {}
+
+Tarjeta::Tarjeta(string t, Territorio te) {
+    tipo = t;
+    territorio = te;
 }
 
-// Constructor de la clase Tarjeta sin territorio asociado
-Tarjeta::Tarjeta(string t, int e) {
-  tipo = t;
-  territorio = nullptr; // Sin territorio asociado
-  unidadesDeEjercito_tarjeta = e;
-  utilizada = false; // Inicializa como no utilizada
+Tarjeta::Tarjeta(string t) {
+    tipo = t;
 }
 
-// Método para obtener el tipo de la tarjeta
-string Tarjeta::getTipo() {
-  return tipo;
+const string &Tarjeta::getTipo() const {
+    return tipo;
 }
 
-// Método para obtener el territorio asociado a la tarjeta
-Territorio* Tarjeta::getTerritorio() {
-  return territorio;
+void Tarjeta::setTipo(const string &tipo) {
+    Tarjeta::tipo = tipo;
 }
 
-// Método para obtener la cantidad de ejército en la tarjeta
-int Tarjeta::getEjercito() {
-  return unidadesDeEjercito_tarjeta;
+const Territorio &Tarjeta::getTerritorio() const {
+    return territorio;
 }
 
-// Método para establecer si la tarjeta ha sido utilizada
-void Tarjeta::setUtilizada(bool v) {
-  utilizada = v;
+void Tarjeta::setTerritorio(const Territorio &territorio) {
+    Tarjeta::territorio = territorio;
 }
 
-// Método para verificar si la tarjeta ha sido utilizada
-bool Tarjeta::getUtilizada() {
-  return utilizada;
-}

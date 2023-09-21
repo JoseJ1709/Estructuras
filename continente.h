@@ -1,8 +1,9 @@
 /*
   Estructura de Datos - Proyecto de clase
-- Jose Andres Jaramillo
+- Jose Andres Jaramillo- Juan Camilo Gomez
   Universidad Javeriana - Tercer periodo 2023
 */
+
 #include <string>
 
 #ifndef CONTINENTE_H
@@ -10,19 +11,22 @@
 
 using namespace std;
 
-// Definición de la clase Continente
 class Continente {
 private:
   int id_contienente;
   string nombre_continente;
 
 public:
-  // Constructor de la clase Continente
-  Continente(int id, string n);
-  // Método para obtener el nombre del continente
-  string getNombre();
-  // Método para obtener el ID del continente
-  int getId();
+  Continente();
+  Continente(int id, string nonmbre);
+
+    int getIdContienente() const;
+
+    void setIdContienente(int idContienente);
+
+    const string &getNombreContinente() const;
+
+    void setNombreContinente(const string &nombreContinente);
 };
 
 #endif // CONTINENTE_H

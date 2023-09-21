@@ -1,45 +1,53 @@
+/*
+  Estructura de Datos - Proyecto de clase
+- Jose Andres Jaramillo- Juan Camilo Gomez
+  Universidad Javeriana - Tercer periodo 2023
+*/
 
 #include "territorio.h"
 
-// Constructor de la clase Territorio
-Territorio::Territorio(string n, string c) {
-  nombre_territorio = n;
-  unidadesDeEjercito_territorio = 0;
+Territorio::Territorio(string nombre, int id, int idcontinente) {
+    nombre_territorio = nombre;
+    id_territorio = id;
+    id_continente = idcontinente;
 }
 
-// Método para obtener el nombre del territorio
-string Territorio::getNombre() {
-  return nombre_territorio;
+int Territorio::getIdTerritorio() const {
+    return id_territorio;
 }
 
-// Método para agregar un territorio adyacente alrededor del territorio actual
-void Territorio::agregarTerritorioAlrededor(Territorio* ter) {
-  territorios_alrededor.push_back(ter);
+void Territorio::setIdTerritorio(int idTerritorio) {
+    id_territorio = idTerritorio;
 }
 
-// Método para obtener la lista de territorios adyacentes
-list<Territorio*> Territorio::getTerritorioAlrededor() {
-  return territorios_alrededor;
+const string &Territorio::getNombreTerritorio() const {
+    return nombre_territorio;
 }
 
-// Método para obtener el número de unidades de ejército en el territorio
-int Territorio::getUnidadesDeEjercito_territorio() {
-  return unidadesDeEjercito_territorio;
+void Territorio::setNombreTerritorio(const string &nombreTerritorio) {
+    nombre_territorio = nombreTerritorio;
 }
 
-// Método para establecer el número de unidades de ejército en el territorio
-void Territorio::setUnidadesDeEjercito_territorio(int cantidad_unidades) {
-  unidadesDeEjercito_territorio = cantidad_unidades;
+int Territorio::getIdContinente() const {
+    return id_continente;
 }
 
-// Método para eliminar una unidad del territorio
-void Territorio::eliminarUnidadesTerritorio() {
-  if (unidadesDeEjercito_territorio > 0) {
-    unidadesDeEjercito_territorio--;
-  }
+void Territorio::setIdContinente(int idContinente) {
+    id_continente = idContinente;
 }
 
-// Método para agregar unidades adicionales al territorio
-void Territorio::agregarUnidadesTerritorioAdicional(int cantidad_adicional) {
-  unidadesDeEjercito_territorio += cantidad_adicional;
+const list<Territorio *> &Territorio::getTerritoriosAlrededor() const {
+    return territorios_alrededor;
+}
+
+void Territorio::setTerritoriosAlrededor(const list<Territorio *> &territoriosAlrededor) {
+    territorios_alrededor = territoriosAlrededor;
+}
+
+int Territorio::getUnidadesDeEjercitoTerritorio() const {
+    return unidadesDeEjercito_territorio;
+}
+
+void Territorio::setUnidadesDeEjercitoTerritorio(int unidadesDeEjercitoTerritorio) {
+    unidadesDeEjercito_territorio = unidadesDeEjercitoTerritorio;
 }

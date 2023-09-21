@@ -1,3 +1,9 @@
+/*
+  Estructura de Datos - Proyecto de clase
+- Jose Andres Jaramillo- Juan Camilo Gomez
+  Universidad Javeriana - Tercer periodo 2023
+*/
+
 #include "continente.h"
 #include "jugador.h"
 #include "tarjeta.h"
@@ -10,20 +16,36 @@
 
 using namespace std;
 
-// Definición de la clase EstadoJuego
 class EstadoJuego {
 private:
-  vector<Jugador> jugadores_tablero;
-  vector<Tarjeta> tarjetas_tablero;
-  vector<Jugador>::iterator iterador_jugadores;
+  list<Jugador> jugadores;
+  list<Tarjeta> mazo;
+  list<Jugador>::iterator iterador_jugadores;
+public:
+    const list<Tarjeta> &getMazo() const;
+
+    void setMazo(const list<Tarjeta> &mazo);
 
 public:
-  EstadoJuego(int numJugadores);
-  // Método para inicializar el juego
+  EstadoJuego();
+
+    EstadoJuego(list<Jugador> j, list<Tarjeta> m, list<Jugador>::iterator iteradorJugadores);
+
   void inicializar();
-  // Método para que un jugador realice su turno
-  void turno(string id_jugador);
-  // Agrega más métodos según sea necesario
+  void turno(int id_jugador);
+
+    const list<Jugador> &getJugadores() const;
+
+    void setjugadores(const list<Jugador> &jugadores);
+
+    const list<Tarjeta> &getmazo() const;
+
+    void setmazo(const list<Tarjeta> &mazo);
+
+    const list<Jugador>::iterator &getIteradorJugadores() const;
+
+    void setIteradorJugadores(const list<Jugador>::iterator &iteradorJugadores);
+
 };
 
 #endif // ESTADOJUEGO_H

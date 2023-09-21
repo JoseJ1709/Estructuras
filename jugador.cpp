@@ -1,96 +1,70 @@
+/*
+  Estructura de Datos - Proyecto de clase
+- Jose Andres Jaramillo- Juan Camilo Gomez
+  Universidad Javeriana - Tercer periodo 2023
+*/
+
 #include "jugador.h"
 
-// Constructor de la clase Jugador
-Jugador::Jugador(string n, string c, string id) {
+Jugador::Jugador(){}
+Jugador::Jugador(string n, string c, int id) {
   nombre_jugador = n;
   color_jugador = c;
   id_jugador = id;
 }
 
-// Método para obtener el nombre del jugador
-string Jugador::getNombre() {
-  return nombre_jugador;
-}
-
-// Método para obtener el color del jugador
-string Jugador::getColor() {
-  return color_jugador;
-}
-
-// Método para obtener el ID del jugador
-string Jugador::getId() {
-  return id_jugador;
-}
-
-// Método para establecer el ID del jugador
-void Jugador::setId(string id) {
-  id_jugador = id;
-}
-
-// Función para jugar el turno del jugador
 int Jugador::Turno() {
-  // Implementa la lógica de juego del turno del jugador
-  // Retorna un valor que indique el resultado del turno (puede ser un código de éxito o error)
-  return 0; // Cambia esto a un valor apropiado
+return 0;
 }
 
-// Función para fortificar territorios
 void Jugador::fortificar() {
-  // Implementa la lógica de fortificación de territorios
+
 }
 
-// Función para atacar territorios
 void Jugador::atacar() {
-  // Implementa la lógica de ataque a territorios
+
 }
 
-// Función para mover unidades entre territorios
 void Jugador::mover() {
-  // Implementa la lógica de movimiento de unidades entre territorios
+
 }
 
-// Método para agregar una tarjeta al jugador
-void Jugador::agregarTarjeta(Tarjeta* t) {
-  tarjetas_jugador.push_back(t);
+const string &Jugador::getNombreJugador() const {
+    return nombre_jugador;
 }
 
-// Método para obtener la lista de tarjetas del jugador
-list<Tarjeta*> Jugador::getTarjetas() {
-  list<Tarjeta*> tarjetas;
-  for (Tarjeta* t : tarjetas_jugador) {
-    tarjetas.push_back(t);
-  }
-  return tarjetas;
+void Jugador::setNombreJugador(const string &nombreJugador) {
+    nombre_jugador = nombreJugador;
 }
 
-// Método para calcular combinaciones posibles de tarjetas
-list<string> Jugador::calcularCombinacionesTarjetas() {
-  // Implementa la lógica para calcular combinaciones de tarjetas
-  list<string> combinaciones;
-  // ...
-  return combinaciones;
+const int &Jugador::getIdJugador() const {
+    return id_jugador;
 }
 
-// Método para agregar un territorio al jugador
-void Jugador::agregarTerritorio(Territorio* t) {
-  territorios_jugador.push_back(t);
+void Jugador::setIdJugador(const int &idJugador) {
+    id_jugador = idJugador;
 }
 
-// Método para obtener la lista de territorios del jugador
-list<Territorio*> Jugador::getTerritorios_jugador() {
-  list<Territorio*> territorios;
-  for (Territorio* t : territorios_jugador) {
-    territorios.push_back(t);
-  }
-  return territorios;
+const string &Jugador::getColorJugador() const {
+    return color_jugador;
 }
 
-// Método para agregar unidades adicionales al jugador
-void Jugador::agregarUnidadesAdicionales(int cant_adicional) {
-  // Implementa la lógica para agregar unidades adicionales al jugador
+void Jugador::setColorJugador(const string &colorJugador) {
+    color_jugador = colorJugador;
 }
 
-// Método para eliminar unidades del ejército del jugador
-void Jugador::eliminarUnidadesEjercito() {
-  // Implementa la lógica para eliminar unidades del ejército del jugador
+const list<Tarjeta *> &Jugador::getTarjetasJugador() const {
+    return tarjetas_jugador;
+}
+
+void Jugador::setTarjetasJugador(const list<Tarjeta *> &tarjetasJugador) {
+    tarjetas_jugador = tarjetasJugador;
+}
+
+const list<Territorio *> &Jugador::getTerritoriosJugador() const {
+    return territorios_jugador;
+}
+
+void Jugador::setTerritoriosJugador(const list<Territorio *> &territoriosJugador) {
+    territorios_jugador = territoriosJugador;
 }
