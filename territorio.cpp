@@ -6,7 +6,8 @@
 
 #include "territorio.h"
 
-Territorio::Territorio(string nombre, int id, int idcontinente) {
+Territorio::Territorio(int key,int id,string nombre, int idcontinente) {
+    key_territorio = key;
     nombre_territorio = nombre;
     id_territorio = id;
     id_continente = idcontinente;
@@ -36,11 +37,11 @@ void Territorio::setIdContinente(int idContinente) {
     id_continente = idContinente;
 }
 
-const list<Territorio *> &Territorio::getTerritoriosAlrededor() const {
+const list<string> &Territorio::getTerritoriosAlrededor() const {
     return territorios_alrededor;
 }
 
-void Territorio::setTerritoriosAlrededor(const list<Territorio *> &territoriosAlrededor) {
+void Territorio::setTerritoriosAlrededor(const list<string> &territoriosAlrededor) {
     territorios_alrededor = territoriosAlrededor;
 }
 

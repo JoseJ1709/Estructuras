@@ -15,10 +15,9 @@ class Continente {
 private:
   int id_contienente;
   string nombre_continente;
-
+  int numero_territorios;
 public:
-  Continente();
-  Continente(int id, string nonmbre);
+  Continente(int id, string nombre, int num_territorios);
 
     int getIdContienente() const;
 
@@ -27,6 +26,8 @@ public:
     const string &getNombreContinente() const;
 
     void setNombreContinente(const string &nombreContinente);
+
+    int getNumContinente() const;
 };
 
 #endif // CONTINENTE_H

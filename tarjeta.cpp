@@ -5,16 +5,13 @@
 */
 
 #include "tarjeta.h"
+#include <string>
 
-Territorio::Territorio() {}
 
-Tarjeta::Tarjeta(string t, Territorio te) {
+Tarjeta::Tarjeta(int k,string t, string te) {
+    key = k;
     tipo = t;
     territorio = te;
-}
-
-Tarjeta::Tarjeta(string t) {
-    tipo = t;
 }
 
 const string &Tarjeta::getTipo() const {
@@ -25,11 +22,11 @@ void Tarjeta::setTipo(const string &tipo) {
     Tarjeta::tipo = tipo;
 }
 
-const Territorio &Tarjeta::getTerritorio() const {
+const string &Tarjeta::getTerritorio() const {
     return territorio;
 }
 
-void Tarjeta::setTerritorio(const Territorio &territorio) {
-    Tarjeta::territorio = territorio;
+void Tarjeta::setTerritorio(string territorio)  {
+    territorio = territorio;
 }
 

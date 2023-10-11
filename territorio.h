@@ -13,14 +13,15 @@ using namespace std;
 
 class Territorio {
 private:
+  int key_territorio;
   int id_territorio;
   string nombre_territorio;
   int id_continente;
-  list<Territorio*> territorios_alrededor;
+  list<string> territorios_alrededor;
   int unidadesDeEjercito_territorio;
 
 public:
-  Territorio(string nombre, int id, int idcontinente);
+  Territorio(int key,int id,string nombre, int idcontinente);
 
     Territorio();
 
@@ -36,9 +37,9 @@ public:
 
     void setIdContinente(int idContinente);
 
-    const list<Territorio *> &getTerritoriosAlrededor() const;
+    const list<string> &getTerritoriosAlrededor() const;
 
-    void setTerritoriosAlrededor(const list<Territorio *> &territoriosAlrededor);
+    void setTerritoriosAlrededor(const list<string> &territoriosAlrededor);
 
     int getUnidadesDeEjercitoTerritorio() const;
 

@@ -5,11 +5,13 @@
 */
 
 #include "continente.h"
+#include <string>
 
-Continente::Continente() {}
-Continente::Continente(int id, string nombre) {
+
+Continente::Continente(int id, string nombre, int num_territorios) {
   id_contienente = id;
   nombre_continente = nombre;
+  numero_territorios = num_territorios;
 }
 
 int Continente::getIdContienente() const {
@@ -26,4 +28,8 @@ const string &Continente::getNombreContinente() const {
 
 void Continente::setNombreContinente(const string &nombreContinente) {
     nombre_continente = nombreContinente;
+}
+
+int Continente::getNumContinente() const {
+    return numero_territorios;
 }
