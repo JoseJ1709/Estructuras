@@ -1,0 +1,7 @@
+# ninja log v5
+2	167	1697131632617358826	CMakeFiles/Estructuras.dir/Juego/Dado.cpp.o	6b40394d56330217
+1	808	1697131633261384200	CMakeFiles/Estructuras.dir/Estructura/continente.cpp.o	2085f36fd285d79d
+1	1075	1697131633525394552	CMakeFiles/Estructuras.dir/Codificacion/Arbol.cpp.o	3709e70400fe40f9
+168	1196	1697131633645399258	CMakeFiles/Estructuras.dir/Codificacion/Nodo.cpp.o	596af95935714ea5
+809	1479	1697131633933410552	CMakeFiles/Estructuras.dir/Estructura/tarjeta.cpp.o	9a90677e15b6bcdc
+1075	1793	1697131634245422713	CMakeFiles/Estructuras.dir/Estructura/territorio.cpp.o	b7ea08222feb0ee1

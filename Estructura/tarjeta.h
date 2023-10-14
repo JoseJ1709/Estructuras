@@ -14,22 +14,25 @@ using namespace std;
 
 class Tarjeta {
 private:
-  int key;
-  string tipo;
-  string territorio;
+
+    int id_tarjeta;
+    string tipo_tarjeta;
+    int key_territorio;
+    string dibujo;
 
 public:
-  Tarjeta(int k,string t, string te);
+    Tarjeta(int id,string t,int key_t, string dib);
 
-    Tarjeta();
+    int getIdTarjeta() const;
 
     const string &getTipo() const;
 
     void setTipo(const string &tipo);
 
-    void setTerritorio(const string territorio);
+    int getKeyTerritorio() const;
 
-    const string &getTerritorio() const;
+    const string &getDibujo() const;
+
 
 };
 

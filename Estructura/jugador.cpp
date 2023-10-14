@@ -7,10 +7,10 @@
 #include "jugador.h"
 #include <iostream>
 #include <string>
-#include "continente.h"
+#include "Estructura/continente.h"
 #include "tarjeta.h"
 #include <list>
-#include "Dado.h"
+#include "Juego/Dado.h"
 
 using namespace std;
 
@@ -70,7 +70,7 @@ int calcularUnidadesFortificar(int tarjetas_global) {
 void Jugador::fortificar(list<Continente> continentes,  int tarjetas_global ) {
     int opcion= 0;
     int unidades_fortifciar = territorios_jugador.size() / 3;
-    string tipos_tarjeta[4] = {"infanteria", "caballeria", "artilleria", "comodin"};
+    string tipos_tarjeta[4] = {"Soldier", "Horse", "Canon", "comodin"};
     int contador[4] = {0, 0, 0, 0};
     int sum;
     bool ver = false;
@@ -79,14 +79,14 @@ void Jugador::fortificar(list<Continente> continentes,  int tarjetas_global ) {
     bool Comb3 = false;
     cout << "fortificando" << "\n";
 
-                            //-----verificacion de otras unidades------ //
-                                    //verificaion de Tarjetas//
+    //-----verificacion de otras unidades------ //
+    //verificaion de Tarjetas//
 
     //mirar cuantas tarjetas de que tipo tengo - clasificas //
 
     for (const Tarjeta tarjeta: tarjetas_jugador) {
         for (int i = 0; i < 4; i++) {
-            if (tarjeta.getTipo() == tipos_tarjeta[i]) {
+            if (tarjeta.getDibujo() == tipos_tarjeta[i]) {
                 contador[i]++;
                 break;
             }
@@ -108,7 +108,7 @@ void Jugador::fortificar(list<Continente> continentes,  int tarjetas_global ) {
 
     //revisar si tiene tres cartas del mismo dibujo //
     for (int i = 0; i < 2; ++i) {
-        if(contador[i] > 3){
+        if(contador[i] >= 3){
             cout<<"tienes una combinacion de 3 cartas del mismo dibujo"<< "\n";
             Comb1 = true;
         }
@@ -138,7 +138,7 @@ void Jugador::fortificar(list<Continente> continentes,  int tarjetas_global ) {
             //tres cartas con el mismo dibujo //
             if (opcion == 1) {
                 for (int i = 0; i < 3; ++i) {
-                    if (contador[i] > 3) {
+                    if (contador[i] >= 3) {
                         cout << "Intercambiando tarjetas por unidades" << "\n";
                         //borrar trio de tarjetas //
                         bool intercambio_completado = false;
@@ -154,11 +154,12 @@ void Jugador::fortificar(list<Continente> continentes,  int tarjetas_global ) {
                         for (auto it = tarjetas_jugador.begin(); it != tarjetas_jugador.end();) {
                             int i;
                             //encontramos una tarjeta del mismo tipo //
-                            if ((*it).getTipo() == tipos_tarjeta[este]) {
+                            if ((*it).getDibujo() == tipos_tarjeta[este]) {
                                 // Verificar si el jugador tiene el territorio de la tarjeta.
                                 for (const Territorio territorio: territorios_jugador) {
-                                    if ((*it).getTerritorio() == territorio.getNombreTerritorio()) {
+                                    if ((*it).getKeyTerritorio() == territorio.getKeyTerritorio()) {
                                         unidades_fortifciar += 2;
+                                        cout<<"Tienes el mismo terriotorio de la tarjeta" <<"\n";
                                     }
                                 }
                                 // Borrar la tarjeta y obtener el siguiente iterador.
@@ -192,11 +193,14 @@ void Jugador::fortificar(list<Continente> continentes,  int tarjetas_global ) {
                         for (auto it = tarjetas_jugador.begin(); it != tarjetas_jugador.end();) {
                             int i;
                             //encontramos una tarjeta del mismo tipo //
-                            if ((*it).getTipo() == tipos_tarjeta[i]) {
+                            if ((*it).getDibujo() == tipos_tarjeta[i]) {
+                                string nomTerr;
                                 // Verificar si el jugador tiene el territorio de la tarjeta.
                                 for (const Territorio territorio: territorios_jugador) {
-                                    if ((*it).getTerritorio() == territorio.getNombreTerritorio()) {
+
+                                    if ((*it).getKeyTerritorio() == territorio.getKeyTerritorio()) {
                                         unidades_fortifciar += 2;
+                                        cout<<"Tienes el mismo terriotorio de la tarjeta" <<"\n";
                                     }
                                 }
                                 // Borrar la tarjeta y obtener el siguiente iterador.
@@ -227,11 +231,12 @@ void Jugador::fortificar(list<Continente> continentes,  int tarjetas_global ) {
                         for (auto it = tarjetas_jugador.begin(); it != tarjetas_jugador.end();) {
                             int i;
                             //encontramos una tarjeta del mismo tipo //
-                            if ((*it).getTipo() == tipos_tarjeta[i]) {
+                            if ((*it).getDibujo() == tipos_tarjeta[i]) {
                                 // Verificar si el jugador tiene el territorio de la tarjeta.
                                 for (const Territorio territorio: territorios_jugador) {
-                                    if ((*it).getTerritorio() == territorio.getNombreTerritorio()) {
+                                    if ((*it).getKeyTerritorio() == territorio.getKeyTerritorio()) {
                                         unidades_fortifciar += 2;
+                                        cout<<"Tienes el mismo terriotorio de la tarjeta" <<"\n";
                                     }
                                 }
                                 // Borrar la tarjeta y obtener el siguiente iterador.
@@ -258,10 +263,10 @@ void Jugador::fortificar(list<Continente> continentes,  int tarjetas_global ) {
             }
         } while (opcion != 4);
     } else{
-        cout<<"no tienes combinaciones de tarjetas";
+        cout<<"no tienes combinaciones de tarjetas"<< "\n";
     }
 
-                                        //verificacion de continentes//
+    //verificacion de continentes//
 
     int territoriosXcontinente[6] ={0,0,0,0,0,0};
     bool territoriocupado = false;
@@ -344,8 +349,7 @@ void Jugador::fortificar(list<Continente> continentes,  int tarjetas_global ) {
         cout << " - " << territorio.getNombreTerritorio() << " tiene :" << territorio.getUnidadesDeEjercitoTerritorio() << " unidades" <<"\n";
     }
 
-                                //seleccionar y añaidir unidades a territorios //
-
+    //seleccionar y añaidir unidades a territorios //
     do {
         cout << "Usted tiene : " << unidades_fortifciar << " unidades para fortificar sus territorios" << endl;
         cin.ignore();
@@ -386,6 +390,7 @@ void Jugador::fortificar(list<Continente> continentes,  int tarjetas_global ) {
     cout << "Fortificación terminada" << endl;
     cout<<""<< "\n";
 }
+
 
 
 void Jugador::atacar(list<Jugador> &jugadores) {
@@ -625,7 +630,7 @@ void Jugador::setTarjetasJugador(const list<Tarjeta> &tarjetasJugador) {
     tarjetas_jugador = tarjetasJugador;
 }
 
- list<Territorio> &Jugador::getTerritoriosJugador()  {
+const list<Territorio> &Jugador::getTerritoriosJugador() const {
     return territorios_jugador;
 }
 

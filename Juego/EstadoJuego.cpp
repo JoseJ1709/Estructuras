@@ -3,6 +3,14 @@
 //
 
 #include "EstadoJuego.h"
+#include "../Estructura/territorio.h"
+#include "../Estructura/jugador.h"
+#include "../Estructura/continente.h"
+#include "../Estructura/tarjeta.h"
+#include <iostream>
+#include <list>
+
+using namespace std;
 
 void EstadoJuego::inicializar(list<Territorio>& territoriosDisponibles) {
     int numJugadores;

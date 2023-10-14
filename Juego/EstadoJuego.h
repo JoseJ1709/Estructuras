@@ -4,14 +4,15 @@
 
 #ifndef ESTRUCTURAS_ESTADOJUEGO_H
 #define ESTRUCTURAS_ESTADOJUEGO_H
-#include "continente.h"
-#include "jugador.h"
-#include "tarjeta.h"
+#include "../Estructura/continente.h"
+#include "../Estructura/jugador.h"
+#include "../Estructura/tarjeta.h"
 #include <list>
 #include <string>
 #include <iostream>
 
 using namespace std;
+
 class EstadoJuego{
 private:
     list<Jugador> jugadores;
@@ -19,6 +20,9 @@ private:
     list<Jugador>::iterator iterador_jugadores;
     int tarjetas_global;
 public:
+    EstadoJuego(){
+    };
+
     int getTarjetasGlobal() const;
 
     void setTarjetasGlobal(int tarjetasGlobal);

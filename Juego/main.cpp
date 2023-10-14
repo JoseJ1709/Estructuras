@@ -6,15 +6,19 @@
 
 #include <iostream>
 #include <string>
+#include "../Estructura/jugador.h"
+#include "../Estructura/continente.h"
+#include "../Estructura/territorio.h"
+#include "../Estructura/tarjeta.h"
 #include "EstadoJuego.h"
-
+#include <fstream>
 
 using namespace std;
 
 void ayuda();
 EstadoJuego* inicializarJuego(list<Tarjeta> lista_tarjetas, list<Territorio> territorios);
 EstadoJuego* inicializar_a(string archivo);
-void guardar();
+void Guardar(const Jugador &jugador, const list<Continente> &continentes, const list<Territorio> &territorios, const list<Tarjeta> &tarjetasGlobales);
 void guardar_Comprimido();
 void salir();
 list<Continente> Preparar_continentes();
@@ -24,16 +28,17 @@ list<Tarjeta> Preparar_Tarjetas();
 
 int main() {
 
+    bool c;
     EstadoJuego* partida = new EstadoJuego();
     list<Territorio> territorios = Preparar_territorios();
     list<Continente> continentes = Preparar_continentes();
     list<Tarjeta> tarjetas = Preparar_Tarjetas();
-    
+
     string comando;
     int comando1;
     cout << "Bienvenido al juego. Escribe 'ayuda' para ver la lista de comandos." << endl;
 
-    while (true) {
+    while (!c) {
         cout << "Ingrese un comando: ";
         cin >> comando;
         string archivo;
@@ -50,40 +55,42 @@ int main() {
             comando1 = 4;
         } else if (comando == "Turno") {
             comando1 = 5;
-        }else if(comando == "Salir"){
+        } else if (comando == "Salir") {
             comando1 = 6;
-        }
-        else {
+        } else {
             cout << "Comando no reconocido. 0 para ver la lista de comandos." << endl;
             continue;
         }
 
         switch (comando1) {
-            case '0':
+            case 0:
                 ayuda();
                 break;
-            case '1':
-                partida = inicializarJuego(tarjetas,territorios);
+                c = true;
+            case 1:
+                partida = inicializarJuego(tarjetas, territorios);
+                c = true;
                 break;
-            case '2':
+            case 2:
                 cout << "ingrese nombre de archivo";
                 cin >> archivo;
                 partida = inicializar_a(archivo);
+                c = true;
                 break;
-            case '3':
-                guardar();
+            case 3:
+                //Guardar();
                 break;
-            case '4':
+            case 4:
                 guardar_Comprimido();
+                c = true;
                 break;
-            case '5':
-
+            case 5:
+                c = true;
                 break;
             case 6:
                 return 0;
             default:
-                cout << "Comando no reconocido. 0 para ver la lista de comandos." << endl;
-                break;
+                cout<<"comando no reconocido";
         }
     }
     return 0;
@@ -263,50 +270,51 @@ list<Tarjeta> Preparar_Tarjetas(){
 
         // inicializar Tarjetas//
 
-        Tarjeta tarjeta1(1, "infanteria", "Alaska");
-        Tarjeta tarjeta2(2, "infanteria", "Alberta");
-        Tarjeta tarjeta3(3, "infanteria", "América Central");
-        Tarjeta tarjeta4(4, "infanteria", "Estados Unidos Orientales");
-        Tarjeta tarjeta5(5, "infanteria", "Groenlandia");
-        Tarjeta tarjeta6(6, "infanteria", "Territorio Noroccidental");
-        Tarjeta tarjeta7(7, "infanteria", "Ontario");
-        Tarjeta tarjeta8(8, "infanteria", "Quebec");
-        Tarjeta tarjeta9(9, "infanteria", "Estados Unidos Occidentales");
-        Tarjeta tarjeta10(10, "infanteria", "Gran Bretaña");
-        Tarjeta tarjeta11(11, "infanteria", "Islandia");
-        Tarjeta tarjeta12(12, "infanteria", "Europa del Norte");
-        Tarjeta tarjeta13(13, "infanteria", "Escandinavia");
-        Tarjeta tarjeta14(14, "infanteria", "Europa del Sur");
-        Tarjeta tarjeta15(15, "caballeria", "Ucrania");
-        Tarjeta tarjeta16(16, "caballeria", "Europa Occidental");
-        Tarjeta tarjeta17(17, "caballeria", "Afganistán");
-        Tarjeta tarjeta18(18, "caballeria", "China");
-        Tarjeta tarjeta19(19, "caballeria", "India");
-        Tarjeta tarjeta20(20, "caballeria", "Irkutsk");
-        Tarjeta tarjeta21(21, "caballeria", "Japón");
-        Tarjeta tarjeta22(22, "caballeria", "Kamchatka");
-        Tarjeta tarjeta23(23, "caballeria", "Medio Oriente");
-        Tarjeta tarjeta24(24, "caballeria", "Mongolia");
-        Tarjeta tarjeta25(25, "caballeria", "Siam");
-        Tarjeta tarjeta26(26, "caballeria", "Siberia");
-        Tarjeta tarjeta27(27, "caballeria", "Ural");
-        Tarjeta tarjeta28(28, "artilleria", "Yakutsk");
-        Tarjeta tarjeta29(29, "artilleria", "Congo");
-        Tarjeta tarjeta30(30, "artilleria", "África Oriental");
-        Tarjeta tarjeta31(31, "artilleria", "Egipto");
-        Tarjeta tarjeta32(32, "artilleria", "Madagascar");
-        Tarjeta tarjeta33(33, "artilleria", "África del Norte");
-        Tarjeta tarjeta34(34, "artilleria", "África del Sur");
-        Tarjeta tarjeta35(35, "artilleria", "Argentina");
-        Tarjeta tarjeta36(36, "artilleria", "Brasil");
-        Tarjeta tarjeta37(37, "artilleria", "Perú");
-        Tarjeta tarjeta38(38, "artilleria", "Venezuela");
-        Tarjeta tarjeta39(39, "artilleria", "Australia Oriental");
-        Tarjeta tarjeta40(40, "artilleria", "Indonesia");
-        Tarjeta tarjeta41(41, "artilleria", "Nueva Guinea");
-        Tarjeta tarjeta42(42, "artilleria", "Australia Occidental");
-        Tarjeta tarjeta43(43, "Comodín", "Comodín");
-        Tarjeta tarjeta44(44, "Comodín", "Comodín");
+    Tarjeta tarjeta1(1, "TR", 27, "Soldier");
+    Tarjeta tarjeta2(2, "TR", 1, "Canon");
+    Tarjeta tarjeta3(3, "TR", 2, "Canon");
+    Tarjeta tarjeta4(4, "TR", 10, "Soldier");
+    Tarjeta tarjeta5(5, "TR", 11, "Soldier");
+    Tarjeta tarjeta6(6, "TR", 9, "Soldier");
+    Tarjeta tarjeta7(7, "TR", 28, "Canon");
+    Tarjeta tarjeta8(8, "TR", 24, "Canon");
+    Tarjeta tarjeta9(9, "TR", 23, "Soldier");
+    Tarjeta tarjeta10(10, "TR", 40, "Horse");
+    Tarjeta tarjeta11(11, "TR", 4, "Canon");
+    Tarjeta tarjeta12(12, "TR", 25, "Horse");
+    Tarjeta tarjeta13(13, "TR", 18, "Soldier");
+    Tarjeta tarjeta14(14, "TR", 5, "Horse");
+    Tarjeta tarjeta15(15, "TR", 19, "Horse");
+    Tarjeta tarjeta16(16, "TR", 29, "Horse");
+    Tarjeta tarjeta17(17, "TR", 41, "Soldier");
+    Tarjeta tarjeta18(18, "TR", 30, "Canon");
+    Tarjeta tarjeta19(19, "TR", 31, "Horse");
+    Tarjeta tarjeta20(20, "TR", 32, "Canon");
+    Tarjeta tarjeta21(21, "TR", 26, "Horse");
+    Tarjeta tarjeta22(22, "TR", 33, "Canon");
+    Tarjeta tarjeta23(23, "TR", 34, "Horse");
+    Tarjeta tarjeta24(24, "TR", 42, "Horse");
+    Tarjeta tarjeta25(25, "TR", 21, "Soldier");
+    Tarjeta tarjeta26(26, "TR", 15, "Horse");
+    Tarjeta tarjeta27(27, "TR", 8, "Horse");
+    Tarjeta tarjeta28(28, "TR", 6, "Canon");
+    Tarjeta tarjeta29(29, "TR", 12, "Horse");
+    Tarjeta tarjeta30(30, "TR", 7, "Canon");
+    Tarjeta tarjeta31(31, "TR", 14, "Soldier");
+    Tarjeta tarjeta32(32, "TR", 35, "Horse");
+    Tarjeta tarjeta33(33, "TR", 36, "Soldier");
+    Tarjeta tarjeta34(34, "TR", 22, "Canon");
+    Tarjeta tarjeta35(35, "TR", 16, "Soldier");
+    Tarjeta tarjeta36(36, "TR", 20, "Soldier");
+    Tarjeta tarjeta37(37, "TR", 37, "Soldier");
+    Tarjeta tarjeta38(38, "TR", 13, "Horse");
+    Tarjeta tarjeta39(39, "TR", 39, "Canon");
+    Tarjeta tarjeta40(40, "TR", 17, "Soldier");
+    Tarjeta tarjeta41(41, "TR", 3, "Canon");
+    Tarjeta tarjeta42(42, "TR", 38, "Canon");
+    Tarjeta tarjeta43(43, "CM", -1, "Las Tres");
+    Tarjeta tarjeta44(44, "CM", -1, "Las Tres");
+
 
     list<Tarjeta> lista_tarjetas;
 
@@ -356,4 +364,70 @@ list<Tarjeta> Preparar_Tarjetas(){
         lista_tarjetas.push_back(tarjeta43);
         lista_tarjetas.push_back(tarjeta44);
     return lista_tarjetas;
+}
+
+void Guardar(const Jugador &jugador, const list<Continente> &continentes, const list<Territorio> &territorios, const list<Tarjeta> &tarjetasGlobales) {
+    //JUGADOR//
+    ofstream archivo_guardar("/home/jose/Probar/Estructuras1/Juego/partida_guardada.txt");
+    if (archivo_guardar.is_open()) {
+        archivo_guardar << "Nombre del jugador: " << jugador.getNombreJugador() << endl;
+        archivo_guardar << "Color del jugador: " << jugador.getColorJugador() << endl;
+        archivo_guardar << "ID del jugador: " << jugador.getIdJugador() << endl;
+
+        archivo_guardar << "Territorios del jugador:" << endl;
+        for (const Territorio &territorio : jugador.getTerritoriosJugador()) {
+            archivo_guardar << "Nombre: " << territorio.getNombreTerritorio() << ", Unidades: " << territorio.getUnidadesDeEjercitoTerritorio() << endl;
+        }
+
+        archivo_guardar << "Tarjetas del jugador:" << endl;
+        for (const Tarjeta &tarjeta : jugador.getTarjetasJugador()) {
+            archivo_guardar << "ID: " << tarjeta.getIdTarjeta() << ", Tipo: " << tarjeta.getTipo() << ", Territorio: " << tarjeta.getKeyTerritorio() << endl;
+        }
+        archivo_guardar << "Tarjetas Global"  <<endl;
+
+        archivo_guardar.close();
+        cout << "Datos del jugador guardados exitosamente en 'partida_guardada.txt'." << endl;
+    } else {
+        cout << "No se pudo abrir el archivo para guardar los datos del jugador." << endl;
+    }
+
+    //Continentes//
+
+    ofstream archivo_continentes("/home/jose/Probar/Estructuras1/Juego/continentes_guardados.txt");
+    if (archivo_continentes.is_open()) {
+        archivo_continentes << "id_continente" <<";"<<"Nombre continente" <<endl;
+        for (const Continente &continente : continentes) {
+            archivo_continentes << continente.getIdContienente() <<";" << continente.getNombreContinente() <<endl;
+        }
+        archivo_continentes.close();
+        cout << "Datos de continentes guardados exitosamente en 'continentes_guardados.txt'." << endl;
+    } else {
+        cout << "No se pudo abrir el archivo para guardar los datos de continentes." << endl;
+    }
+
+    //Territorios//
+    ofstream archivo_territorios("/home/jose/Probar/Estructuras1/Juego/territorios_guardados.txt");
+    if (archivo_territorios.is_open()) {
+        archivo_territorios << "key_territorio" << ";"<< "id_continente" << "id_territorio"<<";" <<"Descripcion"<<endl;
+        for (const Territorio &territorio : territorios) {
+            archivo_territorios << territorio.getKeyTerritorio() <<";" << territorio.getIdContinente() << ";" << territorio.getIdTerritorio() << ";" << territorio.getNombreTerritorio() << endl;
+        }
+        archivo_territorios.close();
+        cout << "Datos de territorios guardados exitosamente en 'territorios_guardados.txt'." << endl;
+    } else {
+        cout << "No se pudo abrir el archivo para guardar los datos de territorios." << endl;
+    }
+
+    //Tarjetas//
+    ofstream archivo_tarjetas_globales("/home/jose/Probar/Estructuras1/Juego/tarjetas_globales_guardadas.txt");
+    if (archivo_tarjetas_globales.is_open()) {
+        archivo_tarjetas_globales << "id_tarjeta" <<";"<<"Tipo_tarjeta"<<";"<<"Ket_territorio"<<";"<<"Figura"<< endl;
+        for (const Tarjeta &tarjeta : tarjetasGlobales) {
+            archivo_tarjetas_globales << tarjeta.getIdTarjeta()<<";" << tarjeta.getTipo()<<";" << tarjeta.getKeyTerritorio()<<";"<< tarjeta.getDibujo()<< endl;
+        }
+        archivo_tarjetas_globales.close();
+        cout << "Datos de tarjetas globales guardados exitosamente en 'tarjetas_globales_guardadas.txt'." << endl;
+    } else {
+        cout << "No se pudo abrir el archivo para guardar los datos de tarjetas globales." << endl;
+    }
 }

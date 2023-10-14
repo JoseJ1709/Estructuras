@@ -52,3 +52,7 @@ int Territorio::getUnidadesDeEjercitoTerritorio() const {
 void Territorio::setUnidadesDeEjercitoTerritorio(int unidadesDeEjercitoTerritorio) {
     unidadesDeEjercito_territorio = unidadesDeEjercitoTerritorio;
 }
+
+int Territorio::getKeyTerritorio() const {
+    return key_territorio;
+}

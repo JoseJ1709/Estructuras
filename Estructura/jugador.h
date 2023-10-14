@@ -8,10 +8,10 @@
 #include "tarjeta.h"
 #include "territorio.h"
 #include <string>
-#include "continente.h"
+#include "Estructura/continente.h"
 #ifndef JUGADOR_H
 #define JUGADOR_H
-#include "EstadoJuego.h"
+#include "Juego/EstadoJuego.h"
 
 using namespace std;
 
@@ -57,7 +57,7 @@ public:
 
     void setTarjetasJugador(const list<Tarjeta> &tarjetasJugador);
 
-    list<Territorio> &getTerritoriosJugador();
+    const list<Territorio> &getTerritoriosJugador() const;
 
     void setTerritoriosJugador( list<Territorio> &territoriosJugador);
 
