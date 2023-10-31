@@ -44,23 +44,27 @@ void EstadoJuego::inicializar(list<Territorio>& territoriosDisponibles) {
         bool encontrado = false;
         cout << "Territorios disponibles:" << endl;
         for (const Territorio territorio : territoriosDisponibles) {
-            cout << territorio.getNombreTerritorio() << endl;
+            cout << territorio.getNombreTerritorio()  << " key: " << territorio.getKeyTerritorio()<< endl;
         }
         do{
-            cout<<"jugador " <<  itj->getNombreJugador() << "seleccione territorio por nombre" << endl;
+            cout<<"jugador " <<  itj->getNombreJugador() << " seleccione territorio por key: " << endl;
             cin >> seleccion;
-            for (auto itt = territoriosDisponibles.begin(); itt != territoriosDisponibles.end(); ++itt) {
-                if ((*itt).getNombreTerritorio() == seleccion) {
+            int key = stoi(seleccion);
+            list<Territorio>::iterator itt;
+            for ( itt = territoriosDisponibles.begin(); itt != territoriosDisponibles.end(); ++itt) {
+                if (itt->getKeyTerritorio() == key) {
                     itj->getTerritoriosJugador().push_back(*itt);
                     itt=territoriosDisponibles.erase(itt);
                     encontrado = true;
                 }
             }
             if(!encontrado)
-                cout<< "territorio no encontrado";
+                cout<< "territorio no encontrado" << endl;
         }while(!encontrado);
         cout<<"territorio "<< seleccion << " encontrado" << endl;
-        if(itj==this->jugadores.end())
+        list<Jugador>::iterator aux = itj;
+        aux++;
+        if(aux==this->jugadores.end())
             itj=this->jugadores.begin();
         else
             itj++;
@@ -139,7 +143,7 @@ void EstadoJuego::turno(int id_jugador,list<Continente> continentes) {
     }
 }
 
-const list<Jugador> &EstadoJuego::getJugadores() const {
+ list<Jugador> EstadoJuego::getJugadores() {
     return jugadores;
 }
 
@@ -155,15 +159,15 @@ void EstadoJuego::setIteradorJugadores( list<Jugador>::iterator &iteradorJugador
     iterador_jugadores = iteradorJugadores;
 }
 
-const list<Tarjeta> &EstadoJuego::getMazo() const {
+list<Tarjeta> EstadoJuego::getMazo()  {
     return mazo;
 }
 
-void EstadoJuego::setMazo(const list<Tarjeta> &m) {
+void EstadoJuego::setMazo( list<Tarjeta> m) {
     mazo = m;
 }
 
-int EstadoJuego::getTarjetasGlobal() const {
+int EstadoJuego::getTarjetasGlobal() {
     return tarjetas_global;
 }
 

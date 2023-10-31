@@ -4,13 +4,15 @@
   Universidad Javeriana - Tercer periodo 2023
 */
 
-#include "jugador.h"
+
 #include <iostream>
-#include <string>
-#include "Estructura/continente.h"
-#include "tarjeta.h"
 #include <list>
-#include "Juego/Dado.h"
+#include <string>
+#include "jugador.h"
+#include "continente.h"
+#include "tarjeta.h"
+#include "../Juego/Dado.h"
+#include "../Juego/EstadoJuego.h"
 
 using namespace std;
 
@@ -23,11 +25,12 @@ Jugador::Jugador(string n, string c, int id) {
 
 //Consola//
 
-int Jugador::Turno(EstadoJuego& partida, list<Continente> continentes) {
-    fortificar( continentes , partida.getTarjetasGlobal());
-    atacar(partida.getJugadores());
+int Jugador::Turno(EstadoJuego *partida, list<Continente> continentes) {
+    fortificar( continentes , *partida);
+    atacar(*partida);
     mover();
 }
+
 
 int calcularUnidadesFortificar(int tarjetas_global) {
     int unidades_a_sumar = 0;
@@ -67,7 +70,7 @@ int calcularUnidadesFortificar(int tarjetas_global) {
     return unidades_a_sumar;
 }
 
-void Jugador::fortificar(list<Continente> continentes,  int tarjetas_global ) {
+void Jugador::fortificar(list<Continente> continentes, EstadoJuego &partida ) {
     int opcion= 0;
     int unidades_fortifciar = territorios_jugador.size() / 3;
     string tipos_tarjeta[4] = {"Soldier", "Horse", "Canon", "comodin"};
@@ -84,7 +87,7 @@ void Jugador::fortificar(list<Continente> continentes,  int tarjetas_global ) {
 
     //mirar cuantas tarjetas de que tipo tengo - clasificas //
 
-    for (const Tarjeta tarjeta: tarjetas_jugador) {
+    for ( Tarjeta tarjeta: tarjetas_jugador) {
         for (int i = 0; i < 4; i++) {
             if (tarjeta.getDibujo() == tipos_tarjeta[i]) {
                 contador[i]++;
@@ -167,10 +170,10 @@ void Jugador::fortificar(list<Continente> continentes,  int tarjetas_global ) {
                                 i++;
                                 // Comprobar si hemos encontrado suficientes tarjetas coincidentes.
                                 if (i >= 3) {
-                                    int unidades_sumar = calcularUnidadesFortificar(tarjetas_global);
+                                    int unidades_sumar = calcularUnidadesFortificar(partida.getTarjetasGlobal());
                                     unidades_fortifciar += unidades_sumar;
                                     cout<< "se sumaron " << unidades_sumar<<" unidades";
-                                    tarjetas_global++;
+                                    partida.setTarjetasGlobal(partida.getTarjetasGlobal()+1);
                                     ver = true;
                                     cout << "unidades intercambiadas con exito" << "\n";
                                     opcion = 4;
@@ -210,10 +213,10 @@ void Jugador::fortificar(list<Continente> continentes,  int tarjetas_global ) {
                             }
                         }
                     }
-                    int unidades_sumar = calcularUnidadesFortificar(tarjetas_global);
+                    int unidades_sumar = calcularUnidadesFortificar(partida.getTarjetasGlobal());
                     unidades_fortifciar += unidades_sumar;
                     cout<< "se sumaron " << unidades_sumar<<" unidades";
-                    tarjetas_global++;
+                    partida.setTarjetasGlobal(partida.getTarjetasGlobal()+1);;
                     ver = true;
                     opcion = 4;
                     cout << "unidades intercambiadas con exito" << "\n";
@@ -246,10 +249,10 @@ void Jugador::fortificar(list<Continente> continentes,  int tarjetas_global ) {
                             }
                         }
                         if (t >= 2) {
-                            int unidades_sumar = calcularUnidadesFortificar(tarjetas_global);
+                            int unidades_sumar = calcularUnidadesFortificar(partida.getTarjetasGlobal());
                             unidades_fortifciar += unidades_sumar;
                             cout<< "se sumaron " << unidades_sumar<<" unidades";
-                            tarjetas_global++;
+                            partida.setTarjetasGlobal(partida.getTarjetasGlobal()+1);;
                             ver = true;
                             opcion = 4;
                             cout << "unidades intercambiadas con exito" << "\n";
@@ -391,9 +394,7 @@ void Jugador::fortificar(list<Continente> continentes,  int tarjetas_global ) {
     cout<<""<< "\n";
 }
 
-
-
-void Jugador::atacar(list<Jugador> &jugadores) {
+void Jugador::atacar(EstadoJuego &partida) {
     cout << "Territorios disponibles:" << endl;
     for(Territorio it : this->getTerritoriosJugador()){
         cout << it.getNombreTerritorio();
@@ -450,56 +451,89 @@ void Jugador::atacar(list<Jugador> &jugadores) {
         }
     }while(!flag);
     //se tienen los nombres del territorio atacante y victima
-    list<int> dadosAtacante;
-    list<int> dadosDefensa;
-    for (int i = 0; i < 3; i++)
-        dadosAtacante.push_front(Dado::LanzarDado());
-    for (int i = 0; i < 2; i++)
-        dadosDefensa.push_front(Dado::LanzarDado());
-    dadosAtacante.sort(greater<int>());
-    dadosDefensa.sort(greater<int>());
-    cout << "dados del atacante: " << endl;
-    for (auto itA = dadosAtacante.begin(); itA != dadosAtacante.end(); itA++)
-        cout << *itA << endl;
-    cout << "dados del defensor" << endl;
-    for (auto itD = dadosDefensa.begin(); itD != dadosDefensa.end(); itD++)
-        cout << *itD << endl;
-    auto itA = dadosAtacante.begin();
-    auto itD = dadosDefensa.begin();
-    int restarAtacante = 0;
-    int restarDefensor = 0;
-    for(int i = 0 ; i < 2; i++,itA++,itD++) {
-        if (*itA > *itD) {
-            restarDefensor++;
-        } else {
-            restarAtacante++;
-        }
-    }
-    flag = false;
-    int restantes;
-    for(auto it=this->territorios_jugador.begin(); it != this->territorios_jugador.end(); it++) {
-        if (territorioAtacante == it->getNombreTerritorio()) {
-            if (it->getUnidadesDeEjercitoTerritorio() - restarAtacante < 1) {
-                it->setUnidadesDeEjercitoTerritorio(1);
-                flag = true;
-            }else
-                it->setUnidadesDeEjercitoTerritorio(it->getUnidadesDeEjercitoTerritorio() - restarAtacante);
-            restantes=it->getUnidadesDeEjercitoTerritorio();
-        }
-    }
-    for(auto it=jugadores.begin();it!=jugadores.end();it++){
-        for(auto itt=it->territorios_jugador.begin();itt!=it->territorios_jugador.end();itt++) {
-            if (territorioVictima == itt->getNombreTerritorio()) {
-                if (itt->getUnidadesDeEjercitoTerritorio() - restarDefensor <= 0) {
-                    cout<< "el territorio defensor se ha quedado sin tropas !!!" << endl;
-                    //pedir cantidad para ingresar a este territorio
-                    flag = true;
-                }else
-                    itt->setUnidadesDeEjercitoTerritorio(itt->getUnidadesDeEjercitoTerritorio() - restarAtacante);
+    do{
+        list<int> dadosAtacante;
+        list<int> dadosDefensa;
+        for (int i = 0; i < 3; i++)
+            dadosAtacante.push_front(Dado::LanzarDado());
+        for (int i = 0; i < 2; i++)
+            dadosDefensa.push_front(Dado::LanzarDado());
+        dadosAtacante.sort(greater<int>());
+        dadosDefensa.sort(greater<int>());
+        cout << "dados del atacante: " << endl;
+        for (auto itA = dadosAtacante.begin(); itA != dadosAtacante.end(); itA++)
+            cout << *itA << endl;
+        cout << "dados del defensor" << endl;
+        for (auto itD = dadosDefensa.begin(); itD != dadosDefensa.end(); itD++)
+            cout << *itD << endl;
+        auto itA = dadosAtacante.begin();
+        auto itD = dadosDefensa.begin();
+        int restarAtacante = 0;
+        int restarDefensor = 0;
+        for(int i = 0 ; i < 2; i++,itA++,itD++) {
+            if (*itA > *itD) {
+                restarDefensor++;
+            } else {
+                restarAtacante++;
             }
         }
-    }
-
+        flag = true;
+        bool flag2 = false;
+        int restantes;
+        int tropas = 0;
+        //quitar tropas al atacante
+        for(auto it=this->territorios_jugador.begin(); it != this->territorios_jugador.end(); it++) {
+            if (territorioAtacante == it->getNombreTerritorio()) {
+                if (it->getUnidadesDeEjercitoTerritorio() - restarAtacante < 1) {
+                    it->setUnidadesDeEjercitoTerritorio(1);
+                    flag = false;
+                }else
+                    it->setUnidadesDeEjercitoTerritorio(it->getUnidadesDeEjercitoTerritorio() - restarAtacante);
+                restantes=it->getUnidadesDeEjercitoTerritorio();
+            }
+        }
+        //quitar tropas al defensor
+        for(list<Jugador>::iterator it=partida.getJugadores().begin();it!=partida.getJugadores().end();it++){
+            for(list<Territorio>::iterator itt=it->territorios_jugador.begin();itt!=it->territorios_jugador.end();itt++) {
+                if (territorioVictima == itt->getNombreTerritorio()) {
+                    if (itt->getUnidadesDeEjercitoTerritorio() - restarDefensor <= 0) {
+                        flag= false;
+                        cout<< "el territorio defensor se ha quedado sin tropas !!!" << endl;
+                        //hay que saber que ocurre si se conquista el territorio pero no hay tropas para dar
+                        cout << "al territorio atacante tiene " << restantes-1 << " tropas que puede poner en el territorio conquistado" << endl;
+                        do{
+                            cout << "ingrese tropas para ingresar en el territorio conquistado" << endl;
+                            cin >> seleccion;
+                            tropas = stoi(seleccion);
+                            if (tropas>=1 && tropas <=restantes-1){
+                                flag2= true;
+                            }else
+                                cout << "valor no valido" << endl;
+                        }while(!flag2);
+                        itt->setUnidadesDeEjercitoTerritorio(tropas);
+                        //dar tarjeta
+                        tarjetas_jugador.push_back(partida.getMazo().front());
+                        partida.getMazo().pop_front();
+                    }else
+                        itt->setUnidadesDeEjercitoTerritorio(itt->getUnidadesDeEjercitoTerritorio() - restarAtacante);
+                }
+            }
+        }
+        if(flag){
+            do{
+                cout << "Quieres volver a atacar? " << endl;
+                cin >> seleccion;
+                if(seleccion!="si"||seleccion!="no"){
+                    cout << "respuesta no valida" << endl;
+                }
+            }while(seleccion!="si"||seleccion!="no");
+            if (seleccion== "si")
+                flag= true;
+            else if(seleccion=="no")
+                flag= false;
+        }
+    }while(flag);
+    cout << "Ataque terminado" << endl;
 }
 
 void Jugador::mover() {
@@ -598,39 +632,39 @@ void Jugador::mover() {
 
 }
 
-const string &Jugador::getNombreJugador() const {
+string Jugador::getNombreJugador() {
     return nombre_jugador;
 }
 
-void Jugador::setNombreJugador(const string &nombreJugador) {
+void Jugador::setNombreJugador( string &nombreJugador) {
     nombre_jugador = nombreJugador;
 }
 
-const int &Jugador::getIdJugador() const {
+const int &Jugador::getIdJugador() {
     return id_jugador;
 }
 
-void Jugador::setIdJugador(const int &idJugador) {
+void Jugador::setIdJugador(int &idJugador) {
     id_jugador = idJugador;
 }
 
-const string &Jugador::getColorJugador() const {
+const string &Jugador::getColorJugador() {
     return color_jugador;
 }
 
-void Jugador::setColorJugador(const string &colorJugador) {
+void Jugador::setColorJugador( string &colorJugador) {
     color_jugador = colorJugador;
 }
 
-const list<Tarjeta> &Jugador::getTarjetasJugador() const {
+list<Tarjeta> Jugador::getTarjetasJugador()  {
     return tarjetas_jugador;
 }
 
-void Jugador::setTarjetasJugador(const list<Tarjeta> &tarjetasJugador) {
+void Jugador::setTarjetasJugador( list<Tarjeta> tarjetasJugador) {
     tarjetas_jugador = tarjetasJugador;
 }
 
-const list<Territorio> &Jugador::getTerritoriosJugador() const {
+ list<Territorio> Jugador::getTerritoriosJugador(){
     return territorios_jugador;
 }
 

@@ -13,32 +13,30 @@ using namespace std;
 class Nodo {
 private:
     int frecuencia;
-    string simbolo;
+    int ascii;
     Nodo *izq;
     Nodo *der;
 
 public:
 
-    Nodo(int frecuencia, const string &simbolo) : frecuencia(frecuencia), simbolo(simbolo) {}
+    Nodo(int frecuencia, int ascii) : frecuencia(frecuencia), ascii(ascii) {}
 
-    Nodo(int frecuencia, const string &simbolo, Nodo *izq, Nodo *der);
+    Nodo(int frecuencia, const int &ascii, Nodo *izq, Nodo *der);
 
     Nodo(Nodo *izq, Nodo *der);
 
-    void setIzq(Nodo *izq);
-    void setDer(Nodo *der);
-    void setFrecuencia(int frecuencia);
-    void setSimbolo( string &simbolo);
-    int Getfrecuencia() ;
-    string GetSimbolo();
+    int GetAscii();
     Nodo *GetIzq() ;
     Nodo *GetDer() ;
-    int getFrecuencia();
-    string &getSimbolo();
-    Nodo *getIzq();
-    Nodo *getDer();
+    int GetFrecuencia();
 
+    void setFrecuencia(int frecuencia);
 
+    void setAscii(int ascii);
+
+    void setIzq(Nodo *izq);
+
+    void setDer(Nodo *der);
 };
 
 

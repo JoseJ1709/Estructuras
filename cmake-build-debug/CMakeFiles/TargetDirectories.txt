@@ -1,3 +1,3 @@
-/home/jose/Estructuras6.0/Estructuras/cmake-build-debug/CMakeFiles/Estructuras.dir
-/home/jose/Estructuras6.0/Estructuras/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/jose/Estructuras6.0/Estructuras/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/CMakeFiles/Estructuras.dir
+/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/CMakeFiles/rebuild_cache.dir

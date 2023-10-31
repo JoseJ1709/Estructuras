@@ -1,4 +1,4 @@
-# Install script for directory: /home/jose/Estructuras6.0/Estructuras
+# Install script for directory: /home/jose/Documentos/Estructuras/Proyecto/Estructuras
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/jose/Estructuras6.0/Estructuras/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

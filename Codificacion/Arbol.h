@@ -13,14 +13,14 @@ class Arbol {
 private:
     Nodo raiz;
 public:
-    Arbol(Nodo &raiz);
+    Arbol(Nodo raiz);
     bool isEmpty();
     int getFrec();
-    string getSimbol();
+    int getAscii();
     Nodo getDer();
     Nodo getIzq();
     void setFrec(int frecuencia);
-    void setSimbol(string simbolo);
+    void setAscii(int ascii);
     void setIzq(Arbol izq);
     void setDer(Arbol der);
     //descolgar y colgar //

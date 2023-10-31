@@ -4,12 +4,15 @@
   Universidad Javeriana - Tercer periodo 2023
 */
 
+
 #include <iostream>
 #include <string>
 #include "../Estructura/jugador.h"
 #include "../Estructura/continente.h"
 #include "../Estructura/territorio.h"
 #include "../Estructura/tarjeta.h"
+#include "../Codificacion/Arbol.h"
+#include "../Codificacion/Nodo.h"
 #include "EstadoJuego.h"
 #include <fstream>
 
@@ -18,17 +21,18 @@ using namespace std;
 void ayuda();
 EstadoJuego* inicializarJuego(list<Tarjeta> lista_tarjetas, list<Territorio> territorios);
 EstadoJuego* inicializar_a(string archivo);
-void Guardar(const Jugador &jugador, const list<Continente> &continentes, const list<Territorio> &territorios, const list<Tarjeta> &tarjetasGlobales);
-void guardar_Comprimido();
+void Guardartxt(EstadoJuego partida);
+void GuardarJugador(const Jugador jugador);
+void guardar_Comprimido(EstadoJuego);
 void salir();
 list<Continente> Preparar_continentes();
 list<Territorio> Preparar_territorios();
 list<Tarjeta> Preparar_Tarjetas();
+void GuardarBin();
 
 
 int main() {
 
-    bool c;
     EstadoJuego* partida = new EstadoJuego();
     list<Territorio> territorios = Preparar_territorios();
     list<Continente> continentes = Preparar_continentes();
@@ -38,14 +42,14 @@ int main() {
     int comando1;
     cout << "Bienvenido al juego. Escribe 'ayuda' para ver la lista de comandos." << endl;
 
-    while (!c) {
+    while (true) {
         cout << "Ingrese un comando: ";
         cin >> comando;
         string archivo;
 
         if (comando == "ayuda") {
             comando1 = 0;
-        } else if (comando == "iniciar juego nuevo") {
+        } else if (comando == "nuevo") {
             comando1 = 1;
         } else if (comando == "Cargar archivo") {
             comando1 = 2;
@@ -66,26 +70,21 @@ int main() {
             case 0:
                 ayuda();
                 break;
-                c = true;
             case 1:
                 partida = inicializarJuego(tarjetas, territorios);
-                c = true;
                 break;
             case 2:
                 cout << "ingrese nombre de archivo";
                 cin >> archivo;
                 partida = inicializar_a(archivo);
-                c = true;
                 break;
             case 3:
-                //Guardar();
+                Guardartxt(*partida);
                 break;
             case 4:
-                guardar_Comprimido();
-                c = true;
+                //guardar_Comprimido(*partida);
                 break;
             case 5:
-                c = true;
                 break;
             case 6:
                 return 0;
@@ -93,22 +92,13 @@ int main() {
                 cout<<"comando no reconocido";
         }
     }
-    return 0;
 }
+
 void salir() {
     cout << "Saliendo del juego..." << endl;
     exit(0);
 }
 
-void guardar() {
-    cout << "Guardando el estado del juego..." << endl;
-
-}
-
-void guardar_Comprimido() {
-    cout << "Guardando el estado del juego comprimido..." << endl;
-
-}
 
 EstadoJuego* inicializarJuego(list<Tarjeta> lista_tarjetas, list<Territorio> territorios){
     EstadoJuego* juego = new EstadoJuego();
@@ -219,6 +209,100 @@ list<Territorio> territorios;
         Territorio indonesia(40, 2, "Indonesia", 6);
         Territorio nuevaGuinea(41, 3, "Nueva Guinea", 6);
         Territorio australiaOc(42, 4, "Australia Occidental", 6);
+
+    //Adyacentes Usa
+    list<string> TAalaska = {"Territorio Noroccidental","Alberta","Kamchatka"};
+    list<string> TAalberta = {"Territorio Noroccidental", "Ontario"};
+    list<string> TAamericaC = {"Estados Unidos Occidentales", "Estados Unidos Orientales","Venezuela"};
+    list<string> TAestadosUOr = {"América Central", "Estados Unidos Occidentales","Ontario","Quebec"};
+    list<string> TAgroenlandia = {"Territorio Noroccidental","Ontario","Quebec","Islandia"};
+    list<string> TAteritorioNO = {"Alaska","Alberta","Ontario","Groenlandia"};
+    list<string> TAontario = {"Territorio Noroccidental","Alberta","Estados Unidos Occidentales","Estados Unidos Orientales","Quebec","Groenlandia"};
+    list<string> TAquebec = {"Ontario","Estados Unidos Orientales","Groenlandia"};
+    list<string> TAestadosUOc = {"Alberta","Ontario","Estados Unidos Orientales","América Central"};
+    //Adyacentes Europa
+    list<string> TAgranB ={"Islandia","Europa del Norte","Escandinavia","Europa Occidental"};
+    list<string> TAislandia ={"Gran Bretaña","Escandinavia","Groenlandia"};
+    list<string> TAeuropaN ={"Gran Bretaña","Escandinavia","Europa del Sur","Ucrania","Europa Occidental"};
+    list<string> TAescandinavia ={"Gran Bretaña","Islandia","Europa del Norte","Ucrania"};
+    list<string> TAeuropaS ={"Europa del Norte","Ucrania", "Europa Occidental","Medio Oriente","Egipto","África del Norte"};
+    list<string> TAucrania ={"Europa del Norte", "Escandinavia","Europa del Sur","Afghanistán","Medio Oriente","Ural"};
+    list<string> TAeuropaOc ={"Gran Bretaña", "Europa del Norte","Europa del Sur","África del Norte"};
+
+    //Adyacentes Asia //
+    list<string> TAafganis ={"China","India","Medio Oriente","Ucrania","Ural",};
+    list<string> TAchina ={"Afghanistán","India","Siam","Mongolia","Ural","Siberia"};
+    list<string> TAindia ={"Afghanistán","China","Medio Oriente","Siam"};
+    list<string> TAirkutsk ={"Kamchatka","Mongolia","Siberia","Yakutsk"};
+    list<string> TAjapon ={"Kamchatka","Mongolia"};
+    list<string> TAkamchatka ={"Irkutsk","Japón","Mongolia","Yakutsk","Alaska"};
+    list<string> TAmedio_O ={"Afghanistán","India","Ucrania","Europa del Sur","Egipto"};
+    list<string> TAmongolia ={"China","Irkutsk","Japón","Kamchatka","Siberia"};
+    list<string> TAsiam ={"China","India","Indonesia"};
+    list<string> TAsiberia ={"China","Irkutsk","Mongolia","Ural","Yakutsk"};
+    list<string> TAural ={"Afghanistán","China","Siberia","Ucrania"};
+    list<string> TAyakutsk ={"Irkutsk","Kamchatka","Siberia"};
+    //Adyacentes America Sur//
+    list<string> TAyargentina ={"Brazil","Perú"};
+    list<string> TAbrazil ={"Argentina","Perú","Venezuela","África del Norte"};
+    list<string> TAperu ={"Argentina","Brazil","Venezuela"};
+    list<string> TAvenezuela ={"Brazil","Perú","América Central"};
+    //Adyacentes Africa //
+    list<string> TAycongo ={"África Oriental","África del Norte","África del Sur"};
+    list<string> TAyafrica_O ={"Congo","Egipto","Madagascar","África de Sur"};
+    list<string> TAyegipto ={"África Oriental","África del Norte","Europa del Sur","Medio Oriente"};
+    list<string> TAmadagascar ={"África Oriental","África del Norte"};
+    list<string> TAyafrica_N ={"Brazil","Congo","África Oriental","Egipto","Europa del Sur","Europa Occidental"};
+    list<string> TAyafrica_S ={"Congo","África Oriental","Madagascar"};
+    //Adyacentes Australia //
+    list<string> TAyaust_Or ={"Australia Occidental","Nueva Guinea"};
+    list<string> TAindonesia ={"Siam","Nueva Guinea","Australia Occidental"};
+    list<string> TAnueva_guinea ={"Australia Oriental","Indonesia","Australia Occidental"};
+    list<string> TAyaust_Oc ={"Australia Oriental","Indonesia","Nueva Guinea"};
+
+    alaska.setTerritoriosAlrededor(TAalaska);
+    alaska.setTerritoriosAlrededor(TAalaska);
+    alberta.setTerritoriosAlrededor(TAalberta);
+    americaCen.setTerritoriosAlrededor(TAamericaC);
+    estadosUnidosOri.setTerritoriosAlrededor(TAestadosUOr);
+    groenlandia.setTerritoriosAlrededor(TAgroenlandia);
+    territorioNoroc.setTerritoriosAlrededor(TAteritorioNO);
+    ontario.setTerritoriosAlrededor(TAontario);
+    quebec.setTerritoriosAlrededor(TAquebec);
+    estadosUnidosOc.setTerritoriosAlrededor(TAestadosUOc);
+    granBretana.setTerritoriosAlrededor(TAgranB);
+    islandia.setTerritoriosAlrededor(TAislandia);
+    europaDelNorte.setTerritoriosAlrededor(TAeuropaN);
+    escandinavia.setTerritoriosAlrededor(TAescandinavia);
+    europaDelSur.setTerritoriosAlrededor(TAeuropaS);
+    ucrania.setTerritoriosAlrededor(TAucrania);
+    europaOc.setTerritoriosAlrededor(TAeuropaOc);
+    afghanistan.setTerritoriosAlrededor(TAafganis);
+    china.setTerritoriosAlrededor(TAchina);
+    india.setTerritoriosAlrededor(TAindia);
+    irkutsk.setTerritoriosAlrededor(TAirkutsk);
+    japon.setTerritoriosAlrededor(TAjapon);
+    kamchatka.setTerritoriosAlrededor(TAkamchatka);
+    medioOriente.setTerritoriosAlrededor(TAmedio_O);
+    mongolia.setTerritoriosAlrededor(TAmongolia);
+    siam.setTerritoriosAlrededor(TAsiam);
+    siberia.setTerritoriosAlrededor(TAsiberia);
+    ural.setTerritoriosAlrededor(TAural);
+    yakutsk.setTerritoriosAlrededor(TAyakutsk);
+    argentina.setTerritoriosAlrededor(TAyargentina);
+    brasil.setTerritoriosAlrededor(TAbrazil);
+    peru.setTerritoriosAlrededor(TAperu);
+    venezuela.setTerritoriosAlrededor(TAvenezuela);
+    congo.setTerritoriosAlrededor(TAycongo);
+    africaOrien.setTerritoriosAlrededor(TAyafrica_O);
+    egipto.setTerritoriosAlrededor(TAyegipto);
+    madagascar.setTerritoriosAlrededor(TAmadagascar);
+    africaDelNorte.setTerritoriosAlrededor(TAyafrica_N);
+    africaDelSur.setTerritoriosAlrededor(TAyafrica_S);
+    australiaOriental.setTerritoriosAlrededor(TAyaust_Or);
+    indonesia.setTerritoriosAlrededor(TAindonesia);
+    nuevaGuinea.setTerritoriosAlrededor(TAnueva_guinea);
+    australiaOc.setTerritoriosAlrededor(TAyaust_Oc);
 
         territorios.push_back(alaska);
         territorios.push_back(alberta);
@@ -366,68 +450,82 @@ list<Tarjeta> Preparar_Tarjetas(){
     return lista_tarjetas;
 }
 
-void Guardar(const Jugador &jugador, const list<Continente> &continentes, const list<Territorio> &territorios, const list<Tarjeta> &tarjetasGlobales) {
+void GuardarJugador(Jugador jugador) {
     //JUGADOR//
     ofstream archivo_guardar("/home/jose/Probar/Estructuras1/Juego/partida_guardada.txt");
     if (archivo_guardar.is_open()) {
-        archivo_guardar << "Nombre del jugador: " << jugador.getNombreJugador() << endl;
-        archivo_guardar << "Color del jugador: " << jugador.getColorJugador() << endl;
-        archivo_guardar << "ID del jugador: " << jugador.getIdJugador() << endl;
+        archivo_guardar << jugador.getNombreJugador() << ";"; //nombre
+        archivo_guardar << jugador.getColorJugador() <<  ";"; //color
 
-        archivo_guardar << "Territorios del jugador:" << endl;
-        for (const Territorio &territorio : jugador.getTerritoriosJugador()) {
-            archivo_guardar << "Nombre: " << territorio.getNombreTerritorio() << ", Unidades: " << territorio.getUnidadesDeEjercitoTerritorio() << endl;
+        archivo_guardar << jugador.getTerritoriosJugador().size() << ";"; // numero
+        for ( Territorio territorio : jugador.getTerritoriosJugador()) {
+            archivo_guardar << territorio.getKeyTerritorio() << ";"
+            << territorio.getUnidadesDeEjercitoTerritorio() << ";";
         }
 
-        archivo_guardar << "Tarjetas del jugador:" << endl;
-        for (const Tarjeta &tarjeta : jugador.getTarjetasJugador()) {
-            archivo_guardar << "ID: " << tarjeta.getIdTarjeta() << ", Tipo: " << tarjeta.getTipo() << ", Territorio: " << tarjeta.getKeyTerritorio() << endl;
+        archivo_guardar << jugador.getTarjetasJugador().size() << ";";
+        for ( Tarjeta tarjeta : jugador.getTarjetasJugador()) {
+            archivo_guardar << tarjeta.getIdTarjeta() << ";";
         }
-        archivo_guardar << "Tarjetas Global"  <<endl;
-
+        archivo_guardar << endl;
         archivo_guardar.close();
-        cout << "Datos del jugador guardados exitosamente en 'partida_guardada.txt'." << endl;
     } else {
         cout << "No se pudo abrir el archivo para guardar los datos del jugador." << endl;
     }
+}
 
-    //Continentes//
-
-    ofstream archivo_continentes("/home/jose/Probar/Estructuras1/Juego/continentes_guardados.txt");
-    if (archivo_continentes.is_open()) {
-        archivo_continentes << "id_continente" <<";"<<"Nombre continente" <<endl;
-        for (const Continente &continente : continentes) {
-            archivo_continentes << continente.getIdContienente() <<";" << continente.getNombreContinente() <<endl;
+void Guardartxt(EstadoJuego partida){
+    ofstream archivo_guardar("/home/jose/Probar/Estructuras1/Juego/partida_guardada.txt");
+    if (archivo_guardar.is_open()){
+        archivo_guardar << partida.getJugadores().size() << endl;
+        archivo_guardar.close();
+        for(auto it : partida.getJugadores()){
+            GuardarJugador(it);
         }
-        archivo_continentes.close();
-        cout << "Datos de continentes guardados exitosamente en 'continentes_guardados.txt'." << endl;
-    } else {
-        cout << "No se pudo abrir el archivo para guardar los datos de continentes." << endl;
-    }
-
-    //Territorios//
-    ofstream archivo_territorios("/home/jose/Probar/Estructuras1/Juego/territorios_guardados.txt");
-    if (archivo_territorios.is_open()) {
-        archivo_territorios << "key_territorio" << ";"<< "id_continente" << "id_territorio"<<";" <<"Descripcion"<<endl;
-        for (const Territorio &territorio : territorios) {
-            archivo_territorios << territorio.getKeyTerritorio() <<";" << territorio.getIdContinente() << ";" << territorio.getIdTerritorio() << ";" << territorio.getNombreTerritorio() << endl;
-        }
-        archivo_territorios.close();
-        cout << "Datos de territorios guardados exitosamente en 'territorios_guardados.txt'." << endl;
-    } else {
-        cout << "No se pudo abrir el archivo para guardar los datos de territorios." << endl;
-    }
-
-    //Tarjetas//
-    ofstream archivo_tarjetas_globales("/home/jose/Probar/Estructuras1/Juego/tarjetas_globales_guardadas.txt");
-    if (archivo_tarjetas_globales.is_open()) {
-        archivo_tarjetas_globales << "id_tarjeta" <<";"<<"Tipo_tarjeta"<<";"<<"Ket_territorio"<<";"<<"Figura"<< endl;
-        for (const Tarjeta &tarjeta : tarjetasGlobales) {
-            archivo_tarjetas_globales << tarjeta.getIdTarjeta()<<";" << tarjeta.getTipo()<<";" << tarjeta.getKeyTerritorio()<<";"<< tarjeta.getDibujo()<< endl;
-        }
-        archivo_tarjetas_globales.close();
-        cout << "Datos de tarjetas globales guardados exitosamente en 'tarjetas_globales_guardadas.txt'." << endl;
-    } else {
-        cout << "No se pudo abrir el archivo para guardar los datos de tarjetas globales." << endl;
+        cout << "Datos del jugador guardados exitosamente en 'partida_guardada.txt'." << endl;
+    }else {
+        cout << "No se pudo abrir el archivo para guardar los datos del jugador." << endl;
     }
 }
+
+void guardar_Comprimido(EstadoJuego partida) {
+    Guardartxt(partida);
+
+    ifstream archivo("partida_guardada.txt");
+    if (!archivo.is_open()) {
+        std::cerr << "No se pudo abrir el archivo " << std::endl;
+        return ;
+    }
+
+    string linea;
+    list<Arbol> queue;
+    while (getline(archivo, linea)) {
+        int tamano = linea.size();
+        char caracteres[tamano + 1];
+        linea.copy(caracteres, tamano);
+        caracteres[tamano] = '\0';
+
+
+        for (int i = 0; i < tamano; i++) {
+            bool flag = false;
+            int valor = static_cast<int>(caracteres[i]); // Convierte el carácter a valor ASCII
+            for (auto it: queue) {
+                if (valor == it.getAscii()) {
+                    flag = true;
+                    it.setFrec(it.getFrec() + 1);
+                }
+            }
+            if (!flag) {
+                queue.push_back(Arbol(Nodo(1, valor)));
+            }
+        }
+    }
+    //en teoría queue es una lista de arboles, cada uno siendo un caracter y su frecuencia
+    //se ordena de menor a mayor frecuencia
+    while(queue.size()>1){
+    }
+    archivo.close();
+}
+
+
+

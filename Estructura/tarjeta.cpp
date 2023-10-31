@@ -15,20 +15,22 @@ Tarjeta::Tarjeta(int id,string t,int key_t, string dib) {
     dibujo = dib;
 }
 
-int Tarjeta::getIdTarjeta() const {}
+int Tarjeta::getIdTarjeta() {
+    return id_tarjeta;
+}
 
-const string &Tarjeta::getTipo() const {
+const string &Tarjeta::getTipo() {
     return tipo_tarjeta;
 }
 
-void Tarjeta::setTipo(const string &tipo) {
+void Tarjeta::setTipo( string &tipo) {
     Tarjeta::tipo_tarjeta = tipo;
 }
 
-int Tarjeta::getKeyTerritorio() const {
+int Tarjeta::getKeyTerritorio()  {
     return key_territorio;
 }
-const string &Tarjeta::getDibujo() const {
+const string &Tarjeta::getDibujo()  {
     return dibujo;
 }
 

@@ -4,62 +4,68 @@
   Universidad Javeriana - Tercer periodo 2023
 */
 
+#ifndef JUGADOR_H
+#define JUGADOR_H
+
+
+#include "iostream"
 #include <list>
 #include "tarjeta.h"
 #include "territorio.h"
 #include <string>
-#include "Estructura/continente.h"
-#ifndef JUGADOR_H
-#define JUGADOR_H
-#include "Juego/EstadoJuego.h"
+#include "continente.h"
+
+class EstadoJuego;
 
 using namespace std;
 
 class Jugador {
 private:
-  string nombre_jugador;
-  int id_jugador;
-  string color_jugador; 
-  list<Tarjeta> tarjetas_jugador;
-  list<Territorio> territorios_jugador;
+    string nombre_jugador;
+    int id_jugador;
+    string color_jugador;
+    list <Tarjeta> tarjetas_jugador;
+    list <Territorio> territorios_jugador;
 
 public:
     Jugador();
+
     Jugador(string n, string c, int id);
 
     //Consola//
 
-    int Turno(EstadoJuego &partida,list<Continente> continentes);
+    int Turno(EstadoJuego *partida, list <Continente> continentes);
 
     //Archivo//
 
-    int Turno(EstadoJuego &partida,string territorioAtacante,string territorioVictima, string nombreTerritorio, int unidadesAñadir, int unidades_mover, string territorio_recipiente, string seleccion);
+    int Turno(EstadoJuego &partida, string territorioAtacante, string territorioVictima, string nombreTerritorio,
+              int unidadesAñadir, int unidades_mover, string territorio_recipiente, string seleccion);
 
-    void fortificar( list<Continente> continentes, int tarjetas_global );
+    void fortificar(list <Continente> continentes, EstadoJuego &partida);
 
-    void atacar(list<Jugador> &jugadores);
+    void atacar(EstadoJuego &partida);
 
     void mover();
-  
-    const string &getNombreJugador() const;
 
-    void setNombreJugador(const string &nombreJugador);
+     string getNombreJugador();
 
-    const int &getIdJugador() const;
+    void setNombreJugador(string &nombreJugador);
 
-    void setIdJugador(const int &idJugador);
+    const int &getIdJugador();
 
-    const string &getColorJugador() const;
+    void setIdJugador(int &idJugador);
 
-    void setColorJugador(const string &colorJugador);
+    const string &getColorJugador();
 
-    const list<Tarjeta> &getTarjetasJugador() const;
+    void setColorJugador(string &colorJugador);
 
-    void setTarjetasJugador(const list<Tarjeta> &tarjetasJugador);
+     list <Tarjeta> getTarjetasJugador();
 
-    const list<Territorio> &getTerritoriosJugador() const;
+    void setTarjetasJugador(list <Tarjeta> tarjetasJugador);
 
-    void setTerritoriosJugador( list<Territorio> &territoriosJugador);
+    list <Territorio> getTerritoriosJugador();
+
+    void setTerritoriosJugador(list <Territorio> &territoriosJugador);
 
 };
 

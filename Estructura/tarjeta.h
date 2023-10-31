@@ -23,15 +23,15 @@ private:
 public:
     Tarjeta(int id,string t,int key_t, string dib);
 
-    int getIdTarjeta() const;
+    int getIdTarjeta() ;
 
-    const string &getTipo() const;
+    const string &getTipo() ;
 
-    void setTipo(const string &tipo);
+    void setTipo( string &tipo);
 
-    int getKeyTerritorio() const;
+    int getKeyTerritorio() ;
 
-    const string &getDibujo() const;
+    const string &getDibujo();
 
 
 };

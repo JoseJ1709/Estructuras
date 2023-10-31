@@ -1,15 +1,17 @@
-//
+    //
 // Created by jose on 9/10/23.
 //
 
 #ifndef ESTRUCTURAS_ESTADOJUEGO_H
 #define ESTRUCTURAS_ESTADOJUEGO_H
-#include "../Estructura/continente.h"
-#include "../Estructura/jugador.h"
-#include "../Estructura/tarjeta.h"
+
 #include <list>
 #include <string>
 #include <iostream>
+#include "../Estructura/continente.h"
+#include "../Estructura/jugador.h"
+#include "../Estructura/tarjeta.h"
+
 
 using namespace std;
 
@@ -23,23 +25,19 @@ public:
     EstadoJuego(){
     };
 
-    int getTarjetasGlobal() const;
+    int getTarjetasGlobal();
 
     void setTarjetasGlobal(int tarjetasGlobal);
 
-    const list<Tarjeta> &getMazo() const;
-    void setMazo(const list<Tarjeta> &mazo);
+    list<Tarjeta> getMazo();
+    void setMazo(list<Tarjeta> mazo);
 
     void inicializar(list<Territorio>& territoriosDisponibles);
     void turno(int id_jugador,list<Continente> continentes);
 
-    const list<Jugador> &getJugadores() const;
+     list<Jugador> getJugadores();
 
     void setJugadores(list<Jugador> &jugadores);
-
-    const list<Tarjeta> &getmazo() const;
-
-    void setmazo(const list<Tarjeta> &mazo);
 
     const list<Jugador>::iterator &getIteradorJugadores() const;
 
