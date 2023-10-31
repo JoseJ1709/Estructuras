@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="Estructuras"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Estructuras">
+				<Option output="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Estructuras" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/."/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 Estructuras"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="Estructuras/fast">
+				<Option output="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Estructuras" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/."/>
+					<Add directory="/usr/include/c++/11"/>
+					<Add directory="/usr/include/x86_64-linux-gnu/c++/11"/>
+					<Add directory="/usr/include/c++/11/backward"/>
+					<Add directory="/usr/lib/gcc/x86_64-linux-gnu/11/include"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/usr/include/x86_64-linux-gnu"/>
+					<Add directory="/usr/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 Estructuras/fast"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/gmake -j8 -f &quot;/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Codificacion/Arbol.cpp">
+			<Option target="Estructuras"/>
+		</Unit>
+		<Unit filename="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Codificacion/Arbol.h">
+			<Option target="Estructuras"/>
+		</Unit>
+		<Unit filename="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Codificacion/Nodo.cpp">
+			<Option target="Estructuras"/>
+		</Unit>
+		<Unit filename="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Codificacion/Nodo.h">
+			<Option target="Estructuras"/>
+		</Unit>
+		<Unit filename="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Estructura/continente.cpp">
+			<Option target="Estructuras"/>
+		</Unit>
+		<Unit filename="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Estructura/continente.h">
+			<Option target="Estructuras"/>
+		</Unit>
+		<Unit filename="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Estructura/jugador.cpp">
+			<Option target="Estructuras"/>
+		</Unit>
+		<Unit filename="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Estructura/jugador.h">
+			<Option target="Estructuras"/>
+		</Unit>
+		<Unit filename="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Estructura/tarjeta.cpp">
+			<Option target="Estructuras"/>
+		</Unit>
+		<Unit filename="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Estructura/tarjeta.h">
+			<Option target="Estructuras"/>
+		</Unit>
+		<Unit filename="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Estructura/territorio.cpp">
+			<Option target="Estructuras"/>
+		</Unit>
+		<Unit filename="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Estructura/territorio.h">
+			<Option target="Estructuras"/>
+		</Unit>
+		<Unit filename="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Juego/Dado.cpp">
+			<Option target="Estructuras"/>
+		</Unit>
+		<Unit filename="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Juego/Dado.h">
+			<Option target="Estructuras"/>
+		</Unit>
+		<Unit filename="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Juego/EstadoJuego.cpp">
+			<Option target="Estructuras"/>
+		</Unit>
+		<Unit filename="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Juego/EstadoJuego.h">
+			<Option target="Estructuras"/>
+		</Unit>
+		<Unit filename="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Juego/main.cpp">
+			<Option target="Estructuras"/>
+		</Unit>
+		<Unit filename="/home/jose/Documentos/Estructuras/Proyecto/Estructuras/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
