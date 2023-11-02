@@ -170,7 +170,11 @@ EstadoJuego* Jugador::fortificar(list<Continente> continentes, EstadoJuego* part
                                     }
                                 }
                                 // Borrar la tarjeta y obtener el siguiente iterador.
+                                Tarjeta tarjetaActual = *it;
                                 it = tarjetas_jugador.erase(it);
+                                list<Tarjeta> mazo = partida->getMazo();
+                                mazo.push_back(tarjetaActual);
+                                partida->setMazo(mazo);
                                 i++;
                                 // Comprobar si hemos encontrado suficientes tarjetas coincidentes.
                                 if (i >= 3) {
@@ -211,7 +215,11 @@ EstadoJuego* Jugador::fortificar(list<Continente> continentes, EstadoJuego* part
                                     }
                                 }
                                 // Borrar la tarjeta y obtener el siguiente iterador.
+                                Tarjeta tarjetaActual = *it;
                                 it = tarjetas_jugador.erase(it);
+                                list<Tarjeta> mazo = partida->getMazo();
+                                mazo.push_back(tarjetaActual);
+                                partida->setMazo(mazo);
 
                                 break; // Salir del bucle ya que hemos borrado una
                             }
@@ -247,7 +255,11 @@ EstadoJuego* Jugador::fortificar(list<Continente> continentes, EstadoJuego* part
                                     }
                                 }
                                 // Borrar la tarjeta y obtener el siguiente iterador.
+                                Tarjeta tarjetaActual = *it;
                                 it = tarjetas_jugador.erase(it);
+                                list<Tarjeta> mazo = partida->getMazo();
+                                mazo.push_back(tarjetaActual);
+                                partida->setMazo(mazo);
                                 t++;
                                 break; // Salir del bucle ya que hemos borrado una
                             }
@@ -277,7 +289,7 @@ EstadoJuego* Jugador::fortificar(list<Continente> continentes, EstadoJuego* part
 
     int territoriosXcontinente[6] ={0,0,0,0,0,0};
     bool territoriocupado = false;
-    string nombreTerritorio;
+    int KTerritorio;
     int unidadesAñadir;
     bool esValido = false;
 
@@ -353,35 +365,36 @@ EstadoJuego* Jugador::fortificar(list<Continente> continentes, EstadoJuego* part
     //mostrar territorios //
     cout << "Territorios de " << nombre_jugador << ":" <<"\n";
     for (Territorio territorio : territorios_jugador) {
-        cout << " - " << territorio.getNombreTerritorio() << " tiene :" << territorio.getUnidadesDeEjercitoTerritorio() << " unidades" <<"\n";
+        cout << " - " << territorio.getNombreTerritorio() <<" key : "<<territorio.getKeyTerritorio() <<" tiene :" << territorio.getUnidadesDeEjercitoTerritorio() << " unidades" <<"\n";
     }
 
     //seleccionar y añaidir unidades a territorios //
     while (unidades_fortifciar > 0) {
-        cout << "Usted tiene : " << unidades_fortifciar << " unidades para fortificar sus territorios" << endl;
-        cin.ignore();
+        cout << "Usted tiene : " << unidades_fortifciar << " unidades para fortificar sus territorios, presiona enter para continuar" << endl;
         do {
-            cout << "Dame el nombre del territorio al que quieres fortificar" << endl;
-            getline(cin, nombreTerritorio);
+
+            cout << "Dame la Key del territorio al que quieres fortificar" << endl;
+            cin>>KTerritorio;
 
             for (Territorio &territorio : territorios_jugador) {
-                if (territorio.getNombreTerritorio() == nombreTerritorio) {
+                if (territorio.getKeyTerritorio() == KTerritorio) {
                     esValido = true;
                     break;
                 }
             }
 
             if (!esValido) {
-                cout << "Nombre de territorio no válido. Intente nuevamente." << endl;
+                cout << "Key de territorio no válido. Intente nuevamente." << endl;
             }
         } while (!esValido);
-
+        esValido = false;
         do {
-            cout << "Dame la cantidad de unidades que le quieres añadir" << endl;
+            cout << "Dame la cantidad de unidades que le quieres añadir ";
             cin >> unidadesAñadir;
             if (unidadesAñadir <= unidades_fortifciar) {
+                esValido= true;
                 for (Territorio &territorio : territorios_jugador) {
-                    if (nombreTerritorio == territorio.getNombreTerritorio()) {
+                    if (KTerritorio == territorio.getKeyTerritorio()) {
                         territorio.setUnidadesDeEjercitoTerritorio(territorio.getUnidadesDeEjercitoTerritorio() + unidadesAñadir);
                         unidades_fortifciar -= unidadesAñadir;
                         cout << "Fortificación exitosa. " << territorio.getNombreTerritorio() << " ahora tiene " << territorio.getUnidadesDeEjercitoTerritorio() << " unidades." << endl;
@@ -407,6 +420,8 @@ EstadoJuego* Jugador::fortificar(list<Continente> continentes, EstadoJuego* part
 }
 
 EstadoJuego* Jugador::atacar(EstadoJuego* partida) {
+    cout<<"atacando"<< "\n";
+    cout<<"" << "\n";
 
     cout << "Territorios disponibles:" << endl;
     for(Territorio it : this->getTerritoriosJugador()){
@@ -510,6 +525,7 @@ EstadoJuego* Jugador::atacar(EstadoJuego* partida) {
             if (territorioAtacante == it->getNombreTerritorio()) {
                 if (it->getUnidadesDeEjercitoTerritorio() - restarAtacante <= 1) {
                     it->setUnidadesDeEjercitoTerritorio(1);
+                    cout << "el atacante no tiene tropas suficientes para seguir atacando" << endl;
                     flag = false;
                 }else
                     it->setUnidadesDeEjercitoTerritorio(it->getUnidadesDeEjercitoTerritorio() - restarAtacante);
@@ -519,27 +535,22 @@ EstadoJuego* Jugador::atacar(EstadoJuego* partida) {
         this->setTerritoriosJugador(aux);
         list<Jugador> aux2 = partida->getJugadores();
         for(auto it =aux2.begin();it!=aux2.end();it++){
-            if(it->getNombreJugador()== this->getNombreJugador()){
+            string nombre = this->getNombreJugador();
+            if(it->getNombreJugador()== nombre){
                 *it = *this;
             }
         }
         partida->setJugadores(aux2);
 
         //quitar tropas al defensor
-        bool flag3 = false;
         list<Jugador> jugadores = partida->getJugadores();
         for(auto it=jugadores.begin();it!=jugadores.end();it++){
-            if(flag3){
-                break;
-            }
             list<Territorio> aux = it->territorios_jugador;
             for(auto itt=aux.begin();itt!=aux.end();itt++) {
                 if (territorioVictima == itt->getNombreTerritorio()) {
-                    flag3 = true;
                     if (itt->getUnidadesDeEjercitoTerritorio() - restarDefensor <= 0) {
                         flag= false;
                         cout<< "el territorio defensor se ha quedado sin tropas !!!" << endl;
-                        //hay que saber que ocurre si se conquista el territorio pero no hay tropas para dar
                         cout << "al territorio atacante tiene " << restantes-1 << " tropas que puede poner en el territorio conquistado" << endl;
                         do{
                             cout << "ingrese tropas para ingresar en el territorio conquistado" << endl;
@@ -549,15 +560,33 @@ EstadoJuego* Jugador::atacar(EstadoJuego* partida) {
                             }else
                                 cout << "valor no valido" << endl;
                         }while(!flag2);
-                        itt->setUnidadesDeEjercitoTerritorio(tropas);
+                        Territorio defensor = *itt;
+                        defensor.setUnidadesDeEjercitoTerritorio(tropas);
+                        *itt = defensor;
                         //dar tarjeta
-                        tarjetas_jugador.push_back(partida->getMazo().front());
-                        partida->getMazo().pop_front();
-
-                    }else
-                        itt->setUnidadesDeEjercitoTerritorio(itt->getUnidadesDeEjercitoTerritorio() - restarDefensor);
+                        list<Tarjeta> mazo = partida->getMazo();
+                        list<Tarjeta>::iterator itT = mazo.begin();
+                        Tarjeta tarjetaObtenida = *itT;
+                        tarjetas_jugador.push_back(tarjetaObtenida);
+                        mazo.pop_front();
+                        partida->setMazo(mazo);
+                        list<Jugador> aux2 = partida->getJugadores();
+                        for(auto it3 =aux2.begin();it3!=aux2.end();it3++){
+                            string nombre = this->getNombreJugador();
+                            if(it3->getNombreJugador()== nombre){
+                                *it3 = *this;
+                            }
+                        }
+                        partida->setJugadores(aux2);
+                        cout << "tarjeta entregada" << endl;
+                    }else{
+                        Territorio defensor = *itt;
+                        defensor.setUnidadesDeEjercitoTerritorio(defensor.getUnidadesDeEjercitoTerritorio() - restarDefensor);
+                        *itt = defensor;
+                    }
                 }
             }
+
             it->setTerritoriosJugador(aux);
             list<Jugador> aux2 = partida->getJugadores();
             for(auto it1 =aux2.begin();it1!=aux2.end();it1++){
@@ -600,8 +629,8 @@ EstadoJuego* Jugador::mover(EstadoJuego* partida) {
     bool Valido2 = false;
     bool Valido3 = false;
     bool adyacente = true;
-    string territorio_obtener;
-    string territorio_poner;
+    int  territorio_obtener;
+    int territorio_poner;
     int unidades_mover;
     int suma =0 ;
     int tamaño = territorios_jugador.size();
@@ -610,21 +639,43 @@ EstadoJuego* Jugador::mover(EstadoJuego* partida) {
         suma = suma + territorio.getUnidadesDeEjercitoTerritorio();
     }
     if(suma>tamaño){
-
+        string nombreT;
         cout << "Territorios disponibles:" << "\n";
         for (Territorio it: this->getTerritoriosJugador()) {
-            cout << it.getNombreTerritorio() << " : " << it.getUnidadesDeEjercitoTerritorio() << "unidades" << "\n";
+            cout << it.getNombreTerritorio() << " : " <<"key "<<it.getKeyTerritorio()<<" : "<< it.getUnidadesDeEjercitoTerritorio() << "unidades" << "\n";
         }
 
-        cin.ignore();
         do {
             cout << "selecciona desde donde quieres mover unidades" << "\n";
-            getline(cin, territorio_obtener);
+            cin>> territorio_obtener;
+
             for (auto it = territorios_jugador.begin(); it != territorios_jugador.end(); ++it) {
+
                 Territorio& territorio = *it;
-                if (territorio.getNombreTerritorio() == territorio_obtener) {
+                if (territorio.getKeyTerritorio() == territorio_obtener) {
+                    cout<<"Territorios adyacentes a "<< territorio.getNombreTerritorio() << "\n";
+                    for (string adyacente :territorio.getTerritoriosAlrededor()) {
+                        cout<< adyacente ;
+                        for (Territorio territorio: territorios_jugador) {
+                            if (territorio.getNombreTerritorio() == adyacente) {
+                                cout<< " key :" <<territorio.getKeyTerritorio();
+                            }
+                        }
+                        cout<< "\n";
+                    }
+                    cout << "Seleccione territorio al que desea mover unidades" << "\n";
+                    cin >>territorio_poner;
+
+                    //verificamos que tenemos ese territorio //
+                    for (Territorio territorio: territorios_jugador) {
+                        if (territorio.getKeyTerritorio() == territorio_poner) {
+                            Valido2 = true;
+                            nombreT= territorio.getNombreTerritorio();
+                            cout << "Territorio valido"<< "\n";
+                        }
+                    }
                     do {
-                        cout << "dime cuantas unidades de " << territorio.getUnidadesDeEjercitoTerritorio()
+                        cout << "dime cuantas unidades de " << territorio.getUnidadesDeEjercitoTerritorio()-1
                              << " quieres mover" << "\n";
                         cin >> unidades_mover;
 
@@ -643,30 +694,18 @@ EstadoJuego* Jugador::mover(EstadoJuego* partida) {
                 cout<<"territorio no encontrado" << "\n";
             }
         } while (!Valido);
-        cin.ignore();
         do {
-            cout << "Seleccione territorio al que desea mover unidades" << "\n";
-            getline(cin, territorio_poner);
-
-            //verificamos que tenemos ese territorio //
-            for (Territorio territorio: territorios_jugador) {
-                if (territorio.getNombreTerritorio() == territorio_poner) {
-                    Valido2 = true;
-                    cout << "Territorio valido"<< "\n";
-                }
-            }
             if (Valido2 == true) {
                 cout << "revisando si es adyacente "<< "\n";
                 for (Territorio territorio: territorios_jugador) {
-                    if (territorio.getNombreTerritorio() == territorio_obtener) {
+                    if (territorio.getKeyTerritorio() == territorio_obtener) {
                         for (string adyacente: territorio.getTerritoriosAlrededor()) {
-                            if (adyacente == territorio_poner) {
+                            if (adyacente == nombreT) {
                                 for (Territorio &territorio: territorios_jugador) {
-                                    if (territorio_poner == territorio.getNombreTerritorio()) {
+                                    if (territorio_poner == territorio.getKeyTerritorio()) {
                                         territorio.setUnidadesDeEjercitoTerritorio(territorio.getUnidadesDeEjercitoTerritorio() + unidades_mover);
                                         cout<<"territorio adyacente"<< "\n";
                                         Valido3 = true;
-                                        cout<< territorio.getUnidadesDeEjercitoTerritorio();
                                     }
                                 }
                             }

@@ -18,12 +18,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <sstream>
+
 
 using namespace std;
 
 void ayuda();
 EstadoJuego* inicializarJuego(list<Tarjeta> lista_tarjetas, list<Territorio> territorios);
-EstadoJuego* inicializar_a(string archivo);
+EstadoJuego* inicializar_a(list<Territorio> territorios, list<Tarjeta> tarjetas);
 void Guardartxt(EstadoJuego partida);
 void GuardarJugador(const Jugador jugador);
 void guardar_Comprimido(EstadoJuego);
@@ -88,16 +90,14 @@ int main() {
                 break;
             case 1:
                 if (nuevo == false){
-                partida = inicializarJuego(tarjetas, territorios);
+                    partida = inicializarJuego(tarjetas, territorios);
                     nuevo = true;
                 } else{
                     cout<<"ya tienes una partida en curso";
                 }
                 break;
             case 2:
-                cout << "ingrese nombre de archivo";
-                cin >> archivo;
-                partida = inicializar_a(archivo);
+                partida = inicializar_a(territorios,tarjetas);
                 break;
             case 3:
                 Guardartxt(*partida);
@@ -130,11 +130,71 @@ EstadoJuego* inicializarJuego(list<Tarjeta> lista_tarjetas, list<Territorio> ter
 
 }
 
-EstadoJuego* inicializar_a(string archivo) {
-    EstadoJuego* ba  = new EstadoJuego();
+EstadoJuego* inicializar_a( list<Territorio> territorios,list<Tarjeta> tarjetas) {
+    EstadoJuego* respuesta  = new EstadoJuego();
     cout << "Inicializando el juego del archivo " << endl;
-
-    return ba;
+    ifstream tablero("/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Juego/Tablero.txt");
+    if(tablero.is_open()){
+        string linea;
+        getline(tablero,linea);
+        int nJugadores = stoi(linea);
+        for(int i = 0 ; i < nJugadores ; i++){
+            getline(tablero,linea);
+            istringstream linea1(linea);
+            string token;
+            char separador[] = ";";
+            getline(linea1,token, separador[0]);
+            string nombre = token;
+            getline(linea1,token, separador[0]);
+            string color = token;
+            getline(linea1,token, separador[0]);
+            int nTerritorios = stoi(token);
+            int id = i+1;
+            Jugador jugadorActual = Jugador(nombre,color,id);
+            for(int j = 0 ; j< nTerritorios ; j++){
+                getline(linea1,token, separador[0]);
+                int keyT = stoi(token);
+                Territorio territorioaux;
+                for(auto it : territorios ){
+                    if(it.getKeyTerritorio() == keyT) {
+                        territorioaux = it;
+                        break;
+                    }
+                }
+                getline(linea1,token, separador[0]);
+                territorioaux.setUnidadesDeEjercitoTerritorio(stoi(token));
+                list<Territorio> actualT = jugadorActual.getTerritoriosJugador();
+                actualT.push_back(territorioaux);
+                jugadorActual.setTerritoriosJugador(actualT);
+            }
+            getline(linea1,token, separador[0]);
+            int nCartas = stoi(token);
+            for(int j = 0 ; j < nCartas ; j++){
+                getline(linea1,token, separador[0]);
+                int keyT = stoi(token);
+                for(auto it = tarjetas.begin();it != tarjetas.end();it++){
+                    if(it->getIdTarjeta() == keyT){
+                        jugadorActual.getTarjetasJugador().push_back(*it);
+                        it=tarjetas.erase(it);
+                    }
+                }
+            }
+            list<Jugador> actualJ = respuesta->getJugadores();
+            actualJ.push_back(jugadorActual);
+            respuesta->setJugadores(actualJ);
+            respuesta->setMazo(tarjetas);
+        }
+        tablero.close();
+    }else{
+        cout << "no pude abrir el archivo " << endl;
+    }
+    return respuesta;
+    ifstream jugadas("Jugadas.txt");
+    if(jugadas.is_open()){
+        string linea;
+        getline(tablero,linea);
+    }
+    return respuesta;
 }
 
 void ayuda() {
@@ -489,9 +549,9 @@ void Guardartxt(EstadoJuego partida){
                                 << territorio.getUnidadesDeEjercitoTerritorio() << ";";
             }
 
-            archivo_guardar << jugador.getTarjetasJugador().size() << ";";
+            archivo_guardar << jugador.getTarjetasJugador().size() ;
             for ( Tarjeta tarjeta : jugador.getTarjetasJugador()) {
-                archivo_guardar << tarjeta.getIdTarjeta() << ";";
+                archivo_guardar << ";" << tarjeta.getIdTarjeta();
             }
             archivo_guardar << endl;
         }
@@ -545,7 +605,7 @@ void guardar_Comprimido(EstadoJuego partida) {
 
     ifstream archivo("partida_guardada.txt");
     if (!archivo.is_open()) {
-        std::cerr << "No se pudo abrir el archivo " << std::endl;
+        std::cerr << "No se pudo abrir el archivo 1" << std::endl;
         return ;
     }
 
@@ -601,6 +661,10 @@ void guardar_Comprimido(EstadoJuego partida) {
     ofstream archivobin;
     archivobin.open("partida.bin", ios::binary | ios::out);
     if (archivobin.is_open()) {
+        string a = "hola";
+    archivobin.write(reinterpret_cast<char*>(&a), sizeof(a) );
+    }
+        /*
         short N = short (n);
         archivobin.write(reinterpret_cast<char*>(&N), sizeof(N));
 
@@ -615,7 +679,7 @@ void guardar_Comprimido(EstadoJuego partida) {
 
         ifstream archivo("partida_guardada.txt");
         if (!archivo.is_open()) {
-            std::cerr << "No se pudo abrir el archivo " << std::endl;
+            std::cerr << "No se pudo abrir el archivo 2" << std::endl;
             return ;
         }
         int cont = 0;
@@ -645,8 +709,9 @@ void guardar_Comprimido(EstadoJuego partida) {
         }
         archivo.close();
         archivobin.close();
-        cout<<"guardar binario succesful";
-    }
+        cout<<"guardar binario succesful" << endl;
+    }*/
+    archivo.close();
     archivobin.close();
 }
 
