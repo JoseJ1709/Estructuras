@@ -1482,7 +1482,9 @@ CMakeFiles/Estructuras.dir/Juego/main.cpp.o: /home/jose/Documentos/Estructuras/P
   /usr/include/x86_64-linux-gnu/c++/11/bits/basic_file.h \
   /usr/include/x86_64-linux-gnu/c++/11/bits/c++io.h \
   /usr/include/c++/11/bits/fstream.tcc \
-  /usr/include/c++/11/stdlib.h
+  /usr/include/c++/11/stdlib.h \
+  /usr/include/c++/11/sstream \
+  /usr/include/c++/11/bits/sstream.tcc
 
 
 /usr/include/x86_64-linux-gnu/c++/11/bits/c++io.h:
@@ -1801,6 +1803,8 @@ CMakeFiles/Estructuras.dir/Juego/main.cpp.o: /home/jose/Documentos/Estructuras/P
 
 /usr/include/x86_64-linux-gnu/bits/struct_rwlock.h:
 
+/usr/include/c++/11/sstream:
+
 /usr/include/c++/11/bits/locale_classes.h:
 
 /usr/include/c++/11/bits/codecvt.h:
@@ -1826,6 +1830,8 @@ CMakeFiles/Estructuras.dir/Juego/main.cpp.o: /home/jose/Documentos/Estructuras/P
 /usr/include/c++/11/system_error:
 
 /usr/include/c++/11/bits/cxxabi_forced.h:
+
+/usr/include/c++/11/bits/sstream.tcc:
 
 /usr/include/c++/11/bits/stl_function.h:
 
