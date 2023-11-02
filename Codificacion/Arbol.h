@@ -11,18 +11,21 @@
 using namespace std;
 class Arbol {
 private:
+    Arbol(Nodo *raiz);
+
     Nodo raiz;
 public:
     Arbol(Nodo raiz);
     bool isEmpty();
     int getFrec();
     int getAscii();
-    Nodo getDer();
-    Nodo getIzq();
+    Arbol getDer();
+    Arbol getIzq();
     void setFrec(int frecuencia);
     void setAscii(int ascii);
     void setIzq(Arbol izq);
     void setDer(Arbol der);
+    bool esta(int ascii);
     //descolgar y colgar //
 };
 

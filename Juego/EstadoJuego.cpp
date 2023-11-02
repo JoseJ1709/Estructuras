@@ -9,67 +9,40 @@
 #include "../Estructura/tarjeta.h"
 #include <iostream>
 #include <list>
+#include "cstdlib"
 
 using namespace std;
 
 void EstadoJuego::inicializar(list<Territorio>& territoriosDisponibles) {
+
+
     int numJugadores;
     string seleccion;
-    list<string> colores = {"azul","rojo","verde","amarillo","negro","gris" };
+    list<string> colores = {"azul", "rojo", "verde", "amarillo", "negro", "gris"};
     do {
         cout << "Ingrese el numero de jugadores: " << endl;
         cin >> seleccion;
         numJugadores = stoi(seleccion);
-        if(numJugadores>6||numJugadores<3){
-            cout<< "numero no valido" << endl;
+        if (numJugadores > 6 || numJugadores < 3) {
+            cout << "numero no valido" << endl;
         }
-    }while (numJugadores>6||numJugadores<3);
+    } while (numJugadores > 6 || numJugadores < 3);
     string nombre;
     int id;
     string color;
     list<string>::iterator itc = colores.begin();
     for (int i = 0; i < numJugadores; i++) {
-        cout << "Ingrese el nombre del jugador " << i+1 << ": ";
+        cout << "Ingrese el nombre del jugador " << i + 1 << ": ";
         cin >> nombre;
-        id=i+1;
+        id = i + 1;
         color = *itc;
-        Jugador nuevoJugador(nombre,color,id);
+        Jugador nuevoJugador(nombre, color, id);
         this->jugadores.push_back(nuevoJugador);
         itc++;
     }
     //lista de jugadores creada y lista
     //falta dar territorios
-    list<Jugador>::iterator itj = this->jugadores.begin();
-    while(!territoriosDisponibles.empty()){
-        bool encontrado = false;
-        cout << "Territorios disponibles:" << endl;
-        for (const Territorio territorio : territoriosDisponibles) {
-            cout << territorio.getNombreTerritorio()  << " key: " << territorio.getKeyTerritorio()<< endl;
-        }
-        do{
-            cout<<"jugador " <<  itj->getNombreJugador() << " seleccione territorio por key: " << endl;
-            cin >> seleccion;
-            int key = stoi(seleccion);
-            list<Territorio>::iterator itt;
-            for ( itt = territoriosDisponibles.begin(); itt != territoriosDisponibles.end(); ++itt) {
-                if (itt->getKeyTerritorio() == key) {
-                    itj->getTerritoriosJugador().push_back(*itt);
-                    itt=territoriosDisponibles.erase(itt);
-                    encontrado = true;
-                }
-            }
-            if(!encontrado)
-                cout<< "territorio no encontrado" << endl;
-        }while(!encontrado);
-        cout<<"territorio "<< seleccion << " encontrado" << endl;
-        list<Jugador>::iterator aux = itj;
-        aux++;
-        if(aux==this->jugadores.end())
-            itj=this->jugadores.begin();
-        else
-            itj++;
-    }
-    //falta asignar tropas a esos territorios
+
     int infanteriasPorJugador;
     switch (numJugadores) {
         case 3:
@@ -85,60 +58,108 @@ void EstadoJuego::inicializar(list<Territorio>& territoriosDisponibles) {
             infanteriasPorJugador = 20;
             break;
     }
-    int seleccionTropas;
-    for(itj=this->jugadores.begin();itj!=this->jugadores.end();itj++){
-        int tropasRestantes =infanteriasPorJugador;
-        //Darle a todos los territorios del jugador 1 tropa para asegurarse que ninguna queda vacia y calcular las tropas extra
-        for(auto itt = itj->getTerritoriosJugador().begin(); itt != itj->getTerritoriosJugador().end();itt++){
-            itt->setUnidadesDeEjercitoTerritorio(1);
+    list<string> adyacentes2 = {"p1"};
+    list<string> adyacentes1 = {"p2","p4"};
+    Territorio aux1 = Territorio(1, 1, "p1", 0);
+    aux1.setTerritoriosAlrededor(adyacentes1);
+    Territorio aux2 = Territorio(2, 1, "p2", 0);
+    aux2.setTerritoriosAlrededor(adyacentes2);
+    Territorio aux3 = Territorio(3, 1, "p3", 0);
+    Territorio aux4 = Territorio(4, 1, "p4", 0);
+
+    territoriosDisponibles = {};
+    territoriosDisponibles.push_back(aux1);
+    territoriosDisponibles.push_back(aux2);
+    territoriosDisponibles.push_back(aux3);
+    territoriosDisponibles.push_back(aux4);
+
+
+    list<Jugador>::iterator itj = this->jugadores.begin();
+    while (!territoriosDisponibles.empty()) {
+
+        bool encontrado = false;
+        cout << "Territorios disponibles:" << endl;
+        for (const Territorio territorio: territoriosDisponibles) {
+            cout << territorio.getNombreTerritorio() << " key: " << territorio.getKeyTerritorio() << endl;
         }
-        tropasRestantes=tropasRestantes - itj->getTerritoriosJugador().size();
-
-        //repartir las tropas extra en los territorios que el jugador elija
-
-        while(tropasRestantes!=0){
-            //mostrar territorios del jugador y preguntar en cual se va a poner tropas y mirar si se ingreso un territorio valido
-
-            bool flag=false;
-            for(auto itt = itj->getTerritoriosJugador().begin();itt != itj->getTerritoriosJugador().end();itt++){
-                cout << itt->getNombreTerritorio() << endl;
-            }
-            do {
-                cout << "le quedan " << tropasRestantes << " tropas restantes, escoja territorio para ingresar tropas" << endl;
-                cin >> seleccion;
-                for (auto itt = itj->getTerritoriosJugador().begin(); itt != itj->getTerritoriosJugador().end();itt++) {
-                    if (itt->getNombreTerritorio()==seleccion)
-                        flag = true;
+        while (!encontrado) {
+            cout << "jugador " << itj->getNombreJugador() << " seleccione territorio por key: " << endl;
+            cin >> seleccion;
+            int key = stoi(seleccion);
+            list<Territorio>::iterator itt;
+            for (itt = territoriosDisponibles.begin(); itt != territoriosDisponibles.end(); itt++) {
+                if (itt->getKeyTerritorio() == key) {
+                    itj->setTerritorioJugador(*itt);
+                    itt = territoriosDisponibles.erase(itt);
+                    encontrado = true;
                 }
-                if(!flag)
-                    cout << "territorio no encontrado" << endl;
-            } while (!flag);
-            //con el territorio valido se pregunta la cantidad de tropas hasta ingresar un valor valido
-            flag= false;
-            do {
-                cout << "cuantas tropas quiere ingresar" << endl;
-                cin >> seleccionTropas;
-                if((seleccionTropas<=tropasRestantes) && (seleccionTropas>0)){
-                    flag=true;
-                    for(auto itt = itj->getTerritoriosJugador().begin(); itt != itj->getTerritoriosJugador().end();itt++) {
-                        if (itt->getNombreTerritorio() == seleccion) {
-                            itt->setUnidadesDeEjercitoTerritorio(itt->getUnidadesDeEjercitoTerritorio() + seleccionTropas);
-                            tropasRestantes = tropasRestantes - seleccionTropas;
-                            cout << "tropas agregadas al territorio" << endl;
-                        }
+            }
+            if (!encontrado)
+                cout << "territorio no encontrado" << endl;
+        };
+        cout << "territorio " << seleccion << " encontrado"<<endl;
+
+        list<Jugador>::iterator aux = itj;
+        aux++;
+        if (aux == this->jugadores.end())
+            itj = this->jugadores.begin();
+        else
+            itj++;
+    }
+
+
+    for (Jugador& jugador : this->jugadores) {
+
+
+        list<Territorio> territoriosJugador = jugador.getTerritoriosJugador();
+        int tropasRestantes = infanteriasPorJugador;
+        int seleccionTropas;
+        cout<<"Jugador "<< jugador.getNombreJugador()<< endl;
+        cout<<"Tus territorios son :" << endl;
+        for (Territorio territorio : territoriosJugador) {
+            cout<<territorio.getNombreTerritorio();
+            cout<<" key: ";
+            cout<<territorio.getKeyTerritorio()<<endl;
+        }
+
+        for (Territorio& territorio : territoriosJugador) {
+            territorio.setUnidadesDeEjercitoTerritorio(1);
+            tropasRestantes--;
+        }
+
+        while (tropasRestantes > 0) {
+            cout << jugador.getNombreJugador() << " le quedan " << tropasRestantes << " tropas restantes" << endl;
+            cout << "Escoja territorio por key para ingresar tropas" << endl;
+            cin >> seleccion;
+
+            for (Territorio& territorio : territoriosJugador) {
+                if (territorio.getKeyTerritorio() == stoi(seleccion)) {
+                    cout << "Cuántas tropas quiere ingresar" << endl;
+                    cin >> seleccionTropas;
+                    if (seleccionTropas <= tropasRestantes && seleccionTropas > 0) {
+                        territorio.setUnidadesDeEjercitoTerritorio(
+                                territorio.getUnidadesDeEjercitoTerritorio() + seleccionTropas
+                        );
+                        tropasRestantes -= seleccionTropas;
+                        cout << seleccionTropas << " Tropas agregadas al territorio" << endl;
+                    } else {
+                        cout << "Cantidad de tropas no válida" << endl;
                     }
                 }
-            } while (!flag);
+            }
         }
+        jugador.setTerritoriosJugador(territoriosJugador);
+        cout << jugador.getNombreJugador() << " termino de poner tropas exitosamente" << endl;
     }
+    cout << "inicializacion exitosa" << endl;
 }
 
-
-void EstadoJuego::turno(int id_jugador,list<Continente> continentes) {
+EstadoJuego* EstadoJuego::turno(int id_jugador,list<Continente> continentes) {
     for (Jugador jugador : jugadores) {
         if (jugador.getIdJugador() == id_jugador) {
-            jugador.Turno(this,continentes);
-            return;
+            EstadoJuego* juego = new EstadoJuego;
+            juego = jugador.Turno(this,continentes);
+            return juego;
         }
     }
 }

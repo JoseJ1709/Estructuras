@@ -20,14 +20,16 @@ private:
 public:
 
     Nodo(int frecuencia, int ascii) : frecuencia(frecuencia), ascii(ascii) {}
+    Nodo(int frecuencia) : frecuencia(frecuencia) {}
 
     Nodo(int frecuencia, const int &ascii, Nodo *izq, Nodo *der);
+    Nodo(int frecuencia, Nodo *izq, Nodo *der);
 
     Nodo(Nodo *izq, Nodo *der);
 
     int GetAscii();
-    Nodo *GetIzq() ;
-    Nodo *GetDer() ;
+    Nodo* GetIzq() ;
+    Nodo* GetDer() ;
     int GetFrecuencia();
 
     void setFrecuencia(int frecuencia);

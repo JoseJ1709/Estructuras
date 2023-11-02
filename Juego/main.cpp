@@ -15,6 +15,9 @@
 #include "../Codificacion/Nodo.h"
 #include "EstadoJuego.h"
 #include <fstream>
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 using namespace std;
 
@@ -30,48 +33,66 @@ list<Territorio> Preparar_territorios();
 list<Tarjeta> Preparar_Tarjetas();
 void GuardarBin();
 
+string extraerNumeroTurno(string comando) {
+    if (comando.find("Turno ") == 0) {
+        string numeroTurno = comando.substr(6);
+        return numeroTurno;
+    }
+    return "";
+}
 
 int main() {
-
+    srand (time(NULL));
+    bool nuevo = false;
     EstadoJuego* partida = new EstadoJuego();
     list<Territorio> territorios = Preparar_territorios();
     list<Continente> continentes = Preparar_continentes();
     list<Tarjeta> tarjetas = Preparar_Tarjetas();
-
+    int numeroTurno;
     string comando;
     int comando1;
     cout << "Bienvenido al juego. Escribe 'ayuda' para ver la lista de comandos." << endl;
 
     while (true) {
         cout << "Ingrese un comando: ";
-        cin >> comando;
+        getline(cin,comando);
         string archivo;
 
         if (comando == "ayuda") {
             comando1 = 0;
-        } else if (comando == "nuevo") {
+        } else if (comando == "nuevo juego") {
             comando1 = 1;
         } else if (comando == "Cargar archivo") {
             comando1 = 2;
-        } else if (comando == "Guardar partida .txt") {
+        } else if (comando == "Guardartxt") {
             comando1 = 3;
-        } else if (comando == "Guardar partida .bin") {
+        } else if (comando == "Guardarbin") {
             comando1 = 4;
-        } else if (comando == "Turno") {
-            comando1 = 5;
-        } else if (comando == "Salir") {
-            comando1 = 6;
-        } else {
-            cout << "Comando no reconocido. 0 para ver la lista de comandos." << endl;
-            continue;
+        }else {
+            string numero = extraerNumeroTurno(comando);
+            if (numero != "") {
+                comando1 = 5;
+                numeroTurno = stoi(numero);
+            } else if (comando == "salir") {
+                comando1 = 6;
+            } else {
+                cout << "Comando no reconocido. 0 para ver la lista de comandos." << endl;
+                continue;
+            }
         }
+
 
         switch (comando1) {
             case 0:
                 ayuda();
                 break;
             case 1:
+                if (nuevo == false){
                 partida = inicializarJuego(tarjetas, territorios);
+                    nuevo = true;
+                } else{
+                    cout<<"ya tienes una partida en curso";
+                }
                 break;
             case 2:
                 cout << "ingrese nombre de archivo";
@@ -82,12 +103,13 @@ int main() {
                 Guardartxt(*partida);
                 break;
             case 4:
-                //guardar_Comprimido(*partida);
+                guardar_Comprimido(*partida);
                 break;
             case 5:
+                partida = partida->turno(numeroTurno,continentes);
                 break;
             case 6:
-                return 0;
+                salir();
             default:
                 cout<<"comando no reconocido";
         }
@@ -111,6 +133,7 @@ EstadoJuego* inicializarJuego(list<Tarjeta> lista_tarjetas, list<Territorio> ter
 EstadoJuego* inicializar_a(string archivo) {
     EstadoJuego* ba  = new EstadoJuego();
     cout << "Inicializando el juego del archivo " << endl;
+
     return ba;
 }
 
@@ -210,99 +233,99 @@ list<Territorio> territorios;
         Territorio nuevaGuinea(41, 3, "Nueva Guinea", 6);
         Territorio australiaOc(42, 4, "Australia Occidental", 6);
 
-    //Adyacentes Usa
-    list<string> TAalaska = {"Territorio Noroccidental","Alberta","Kamchatka"};
-    list<string> TAalberta = {"Territorio Noroccidental", "Ontario"};
-    list<string> TAamericaC = {"Estados Unidos Occidentales", "Estados Unidos Orientales","Venezuela"};
-    list<string> TAestadosUOr = {"América Central", "Estados Unidos Occidentales","Ontario","Quebec"};
-    list<string> TAgroenlandia = {"Territorio Noroccidental","Ontario","Quebec","Islandia"};
-    list<string> TAteritorioNO = {"Alaska","Alberta","Ontario","Groenlandia"};
-    list<string> TAontario = {"Territorio Noroccidental","Alberta","Estados Unidos Occidentales","Estados Unidos Orientales","Quebec","Groenlandia"};
-    list<string> TAquebec = {"Ontario","Estados Unidos Orientales","Groenlandia"};
-    list<string> TAestadosUOc = {"Alberta","Ontario","Estados Unidos Orientales","América Central"};
-    //Adyacentes Europa
-    list<string> TAgranB ={"Islandia","Europa del Norte","Escandinavia","Europa Occidental"};
-    list<string> TAislandia ={"Gran Bretaña","Escandinavia","Groenlandia"};
-    list<string> TAeuropaN ={"Gran Bretaña","Escandinavia","Europa del Sur","Ucrania","Europa Occidental"};
-    list<string> TAescandinavia ={"Gran Bretaña","Islandia","Europa del Norte","Ucrania"};
-    list<string> TAeuropaS ={"Europa del Norte","Ucrania", "Europa Occidental","Medio Oriente","Egipto","África del Norte"};
-    list<string> TAucrania ={"Europa del Norte", "Escandinavia","Europa del Sur","Afghanistán","Medio Oriente","Ural"};
-    list<string> TAeuropaOc ={"Gran Bretaña", "Europa del Norte","Europa del Sur","África del Norte"};
+        //Adyacentes Usa
+        list<string> TAalaska = {"Territorio Noroccidental","Alberta","Kamchatka"};
+        list<string> TAalberta = {"Territorio Noroccidental", "Ontario"};
+        list<string> TAamericaC = {"Estados Unidos Occidentales", "Estados Unidos Orientales","Venezuela"};
+        list<string> TAestadosUOr = {"América Central", "Estados Unidos Occidentales","Ontario","Quebec"};
+        list<string> TAgroenlandia = {"Territorio Noroccidental","Ontario","Quebec","Islandia"};
+        list<string> TAteritorioNO = {"Alaska","Alberta","Ontario","Groenlandia"};
+        list<string> TAontario = {"Territorio Noroccidental","Alberta","Estados Unidos Occidentales","Estados Unidos Orientales","Quebec","Groenlandia"};
+        list<string> TAquebec = {"Ontario","Estados Unidos Orientales","Groenlandia"};
+        list<string> TAestadosUOc = {"Alberta","Ontario","Estados Unidos Orientales","América Central"};
+        //Adyacentes Europa
+        list<string> TAgranB ={"Islandia","Europa del Norte","Escandinavia","Europa Occidental"};
+        list<string> TAislandia ={"Gran Bretaña","Escandinavia","Groenlandia"};
+        list<string> TAeuropaN ={"Gran Bretaña","Escandinavia","Europa del Sur","Ucrania","Europa Occidental"};
+        list<string> TAescandinavia ={"Gran Bretaña","Islandia","Europa del Norte","Ucrania"};
+        list<string> TAeuropaS ={"Europa del Norte","Ucrania", "Europa Occidental","Medio Oriente","Egipto","África del Norte"};
+        list<string> TAucrania ={"Europa del Norte", "Escandinavia","Europa del Sur","Afghanistán","Medio Oriente","Ural"};
+        list<string> TAeuropaOc ={"Gran Bretaña", "Europa del Norte","Europa del Sur","África del Norte"};
 
-    //Adyacentes Asia //
-    list<string> TAafganis ={"China","India","Medio Oriente","Ucrania","Ural",};
-    list<string> TAchina ={"Afghanistán","India","Siam","Mongolia","Ural","Siberia"};
-    list<string> TAindia ={"Afghanistán","China","Medio Oriente","Siam"};
-    list<string> TAirkutsk ={"Kamchatka","Mongolia","Siberia","Yakutsk"};
-    list<string> TAjapon ={"Kamchatka","Mongolia"};
-    list<string> TAkamchatka ={"Irkutsk","Japón","Mongolia","Yakutsk","Alaska"};
-    list<string> TAmedio_O ={"Afghanistán","India","Ucrania","Europa del Sur","Egipto"};
-    list<string> TAmongolia ={"China","Irkutsk","Japón","Kamchatka","Siberia"};
-    list<string> TAsiam ={"China","India","Indonesia"};
-    list<string> TAsiberia ={"China","Irkutsk","Mongolia","Ural","Yakutsk"};
-    list<string> TAural ={"Afghanistán","China","Siberia","Ucrania"};
-    list<string> TAyakutsk ={"Irkutsk","Kamchatka","Siberia"};
-    //Adyacentes America Sur//
-    list<string> TAyargentina ={"Brazil","Perú"};
-    list<string> TAbrazil ={"Argentina","Perú","Venezuela","África del Norte"};
-    list<string> TAperu ={"Argentina","Brazil","Venezuela"};
-    list<string> TAvenezuela ={"Brazil","Perú","América Central"};
-    //Adyacentes Africa //
-    list<string> TAycongo ={"África Oriental","África del Norte","África del Sur"};
-    list<string> TAyafrica_O ={"Congo","Egipto","Madagascar","África de Sur"};
-    list<string> TAyegipto ={"África Oriental","África del Norte","Europa del Sur","Medio Oriente"};
-    list<string> TAmadagascar ={"África Oriental","África del Norte"};
-    list<string> TAyafrica_N ={"Brazil","Congo","África Oriental","Egipto","Europa del Sur","Europa Occidental"};
-    list<string> TAyafrica_S ={"Congo","África Oriental","Madagascar"};
-    //Adyacentes Australia //
-    list<string> TAyaust_Or ={"Australia Occidental","Nueva Guinea"};
-    list<string> TAindonesia ={"Siam","Nueva Guinea","Australia Occidental"};
-    list<string> TAnueva_guinea ={"Australia Oriental","Indonesia","Australia Occidental"};
-    list<string> TAyaust_Oc ={"Australia Oriental","Indonesia","Nueva Guinea"};
+        //Adyacentes Asia //
+        list<string> TAafganis ={"China","India","Medio Oriente","Ucrania","Ural",};
+        list<string> TAchina ={"Afghanistán","India","Siam","Mongolia","Ural","Siberia"};
+        list<string> TAindia ={"Afghanistán","China","Medio Oriente","Siam"};
+        list<string> TAirkutsk ={"Kamchatka","Mongolia","Siberia","Yakutsk"};
+        list<string> TAjapon ={"Kamchatka","Mongolia"};
+        list<string> TAkamchatka ={"Irkutsk","Japón","Mongolia","Yakutsk","Alaska"};
+        list<string> TAmedio_O ={"Afghanistán","India","Ucrania","Europa del Sur","Egipto"};
+        list<string> TAmongolia ={"China","Irkutsk","Japón","Kamchatka","Siberia"};
+        list<string> TAsiam ={"China","India","Indonesia"};
+        list<string> TAsiberia ={"China","Irkutsk","Mongolia","Ural","Yakutsk"};
+        list<string> TAural ={"Afghanistán","China","Siberia","Ucrania"};
+        list<string> TAyakutsk ={"Irkutsk","Kamchatka","Siberia"};
+        //Adyacentes America Sur//
+        list<string> TAyargentina ={"Brazil","Perú"};
+        list<string> TAbrazil ={"Argentina","Perú","Venezuela","África del Norte"};
+        list<string> TAperu ={"Argentina","Brazil","Venezuela"};
+        list<string> TAvenezuela ={"Brazil","Perú","América Central"};
+        //Adyacentes Africa //
+        list<string> TAycongo ={"África Oriental","África del Norte","África del Sur"};
+        list<string> TAyafrica_O ={"Congo","Egipto","Madagascar","África de Sur"};
+        list<string> TAyegipto ={"África Oriental","África del Norte","Europa del Sur","Medio Oriente"};
+        list<string> TAmadagascar ={"África Oriental","África del Norte"};
+        list<string> TAyafrica_N ={"Brazil","Congo","África Oriental","Egipto","Europa del Sur","Europa Occidental"};
+        list<string> TAyafrica_S ={"Congo","África Oriental","Madagascar"};
+        //Adyacentes Australia //
+        list<string> TAyaust_Or ={"Australia Occidental","Nueva Guinea"};
+        list<string> TAindonesia ={"Siam","Nueva Guinea","Australia Occidental"};
+        list<string> TAnueva_guinea ={"Australia Oriental","Indonesia","Australia Occidental"};
+        list<string> TAyaust_Oc ={"Australia Oriental","Indonesia","Nueva Guinea"};
 
-    alaska.setTerritoriosAlrededor(TAalaska);
-    alaska.setTerritoriosAlrededor(TAalaska);
-    alberta.setTerritoriosAlrededor(TAalberta);
-    americaCen.setTerritoriosAlrededor(TAamericaC);
-    estadosUnidosOri.setTerritoriosAlrededor(TAestadosUOr);
-    groenlandia.setTerritoriosAlrededor(TAgroenlandia);
-    territorioNoroc.setTerritoriosAlrededor(TAteritorioNO);
-    ontario.setTerritoriosAlrededor(TAontario);
-    quebec.setTerritoriosAlrededor(TAquebec);
-    estadosUnidosOc.setTerritoriosAlrededor(TAestadosUOc);
-    granBretana.setTerritoriosAlrededor(TAgranB);
-    islandia.setTerritoriosAlrededor(TAislandia);
-    europaDelNorte.setTerritoriosAlrededor(TAeuropaN);
-    escandinavia.setTerritoriosAlrededor(TAescandinavia);
-    europaDelSur.setTerritoriosAlrededor(TAeuropaS);
-    ucrania.setTerritoriosAlrededor(TAucrania);
-    europaOc.setTerritoriosAlrededor(TAeuropaOc);
-    afghanistan.setTerritoriosAlrededor(TAafganis);
-    china.setTerritoriosAlrededor(TAchina);
-    india.setTerritoriosAlrededor(TAindia);
-    irkutsk.setTerritoriosAlrededor(TAirkutsk);
-    japon.setTerritoriosAlrededor(TAjapon);
-    kamchatka.setTerritoriosAlrededor(TAkamchatka);
-    medioOriente.setTerritoriosAlrededor(TAmedio_O);
-    mongolia.setTerritoriosAlrededor(TAmongolia);
-    siam.setTerritoriosAlrededor(TAsiam);
-    siberia.setTerritoriosAlrededor(TAsiberia);
-    ural.setTerritoriosAlrededor(TAural);
-    yakutsk.setTerritoriosAlrededor(TAyakutsk);
-    argentina.setTerritoriosAlrededor(TAyargentina);
-    brasil.setTerritoriosAlrededor(TAbrazil);
-    peru.setTerritoriosAlrededor(TAperu);
-    venezuela.setTerritoriosAlrededor(TAvenezuela);
-    congo.setTerritoriosAlrededor(TAycongo);
-    africaOrien.setTerritoriosAlrededor(TAyafrica_O);
-    egipto.setTerritoriosAlrededor(TAyegipto);
-    madagascar.setTerritoriosAlrededor(TAmadagascar);
-    africaDelNorte.setTerritoriosAlrededor(TAyafrica_N);
-    africaDelSur.setTerritoriosAlrededor(TAyafrica_S);
-    australiaOriental.setTerritoriosAlrededor(TAyaust_Or);
-    indonesia.setTerritoriosAlrededor(TAindonesia);
-    nuevaGuinea.setTerritoriosAlrededor(TAnueva_guinea);
-    australiaOc.setTerritoriosAlrededor(TAyaust_Oc);
+        alaska.setTerritoriosAlrededor(TAalaska);
+        alaska.setTerritoriosAlrededor(TAalaska);
+        alberta.setTerritoriosAlrededor(TAalberta);
+        americaCen.setTerritoriosAlrededor(TAamericaC);
+        estadosUnidosOri.setTerritoriosAlrededor(TAestadosUOr);
+        groenlandia.setTerritoriosAlrededor(TAgroenlandia);
+        territorioNoroc.setTerritoriosAlrededor(TAteritorioNO);
+        ontario.setTerritoriosAlrededor(TAontario);
+        quebec.setTerritoriosAlrededor(TAquebec);
+        estadosUnidosOc.setTerritoriosAlrededor(TAestadosUOc);
+        granBretana.setTerritoriosAlrededor(TAgranB);
+        islandia.setTerritoriosAlrededor(TAislandia);
+        europaDelNorte.setTerritoriosAlrededor(TAeuropaN);
+        escandinavia.setTerritoriosAlrededor(TAescandinavia);
+        europaDelSur.setTerritoriosAlrededor(TAeuropaS);
+        ucrania.setTerritoriosAlrededor(TAucrania);
+        europaOc.setTerritoriosAlrededor(TAeuropaOc);
+        afghanistan.setTerritoriosAlrededor(TAafganis);
+        china.setTerritoriosAlrededor(TAchina);
+        india.setTerritoriosAlrededor(TAindia);
+        irkutsk.setTerritoriosAlrededor(TAirkutsk);
+        japon.setTerritoriosAlrededor(TAjapon);
+        kamchatka.setTerritoriosAlrededor(TAkamchatka);
+        medioOriente.setTerritoriosAlrededor(TAmedio_O);
+        mongolia.setTerritoriosAlrededor(TAmongolia);
+        siam.setTerritoriosAlrededor(TAsiam);
+        siberia.setTerritoriosAlrededor(TAsiberia);
+        ural.setTerritoriosAlrededor(TAural);
+        yakutsk.setTerritoriosAlrededor(TAyakutsk);
+        argentina.setTerritoriosAlrededor(TAyargentina);
+        brasil.setTerritoriosAlrededor(TAbrazil);
+        peru.setTerritoriosAlrededor(TAperu);
+        venezuela.setTerritoriosAlrededor(TAvenezuela);
+        congo.setTerritoriosAlrededor(TAycongo);
+        africaOrien.setTerritoriosAlrededor(TAyafrica_O);
+        egipto.setTerritoriosAlrededor(TAyegipto);
+        madagascar.setTerritoriosAlrededor(TAmadagascar);
+        africaDelNorte.setTerritoriosAlrededor(TAyafrica_N);
+        africaDelSur.setTerritoriosAlrededor(TAyafrica_S);
+        australiaOriental.setTerritoriosAlrededor(TAyaust_Or);
+        indonesia.setTerritoriosAlrededor(TAindonesia);
+        nuevaGuinea.setTerritoriosAlrededor(TAnueva_guinea);
+        australiaOc.setTerritoriosAlrededor(TAyaust_Oc);
 
         territorios.push_back(alaska);
         territorios.push_back(alberta);
@@ -346,6 +369,7 @@ list<Territorio> territorios;
         territorios.push_back(indonesia);
         territorios.push_back(nuevaGuinea);
         territorios.push_back(australiaOc);
+
 
         return territorios;
     }
@@ -450,41 +474,69 @@ list<Tarjeta> Preparar_Tarjetas(){
     return lista_tarjetas;
 }
 
-void GuardarJugador(Jugador jugador) {
-    //JUGADOR//
-    ofstream archivo_guardar("/home/jose/Probar/Estructuras1/Juego/partida_guardada.txt");
-    if (archivo_guardar.is_open()) {
-        archivo_guardar << jugador.getNombreJugador() << ";"; //nombre
-        archivo_guardar << jugador.getColorJugador() <<  ";"; //color
 
-        archivo_guardar << jugador.getTerritoriosJugador().size() << ";"; // numero
-        for ( Territorio territorio : jugador.getTerritoriosJugador()) {
-            archivo_guardar << territorio.getKeyTerritorio() << ";"
-            << territorio.getUnidadesDeEjercitoTerritorio() << ";";
-        }
+void Guardartxt(EstadoJuego partida){
+    fstream archivo_guardar("partida_guardada.txt",ios::out);
+    if (archivo_guardar.is_open()){
+        archivo_guardar << partida.getJugadores().size() << endl;
+        for(auto jugador : partida.getJugadores()){
+            archivo_guardar << jugador.getNombreJugador() << ";"; //nombre
+            archivo_guardar << jugador.getColorJugador() <<  ";"; //color
 
-        archivo_guardar << jugador.getTarjetasJugador().size() << ";";
-        for ( Tarjeta tarjeta : jugador.getTarjetasJugador()) {
-            archivo_guardar << tarjeta.getIdTarjeta() << ";";
+            archivo_guardar << jugador.getTerritoriosJugador().size() << ";"; // numero
+            for ( Territorio territorio : jugador.getTerritoriosJugador()) {
+                archivo_guardar << territorio.getKeyTerritorio() << ";"
+                                << territorio.getUnidadesDeEjercitoTerritorio() << ";";
+            }
+
+            archivo_guardar << jugador.getTarjetasJugador().size() << ";";
+            for ( Tarjeta tarjeta : jugador.getTarjetasJugador()) {
+                archivo_guardar << tarjeta.getIdTarjeta() << ";";
+            }
+            archivo_guardar << endl;
         }
-        archivo_guardar << endl;
+        cout << "Datos del jugador guardados exitosamente en 'partida_guardada.txt'." << endl;
         archivo_guardar.close();
-    } else {
+    }else {
         cout << "No se pudo abrir el archivo para guardar los datos del jugador." << endl;
     }
 }
+bool compararArboles(Arbol arbol1, Arbol arbol2) {
+    return arbol1.getFrec() < arbol2.getFrec();
+}
 
-void Guardartxt(EstadoJuego partida){
-    ofstream archivo_guardar("/home/jose/Probar/Estructuras1/Juego/partida_guardada.txt");
-    if (archivo_guardar.is_open()){
-        archivo_guardar << partida.getJugadores().size() << endl;
-        archivo_guardar.close();
-        for(auto it : partida.getJugadores()){
-            GuardarJugador(it);
+void ordenarArboles(list<Arbol> &queue) {
+    int n = queue.size();
+    if (n <= 1) {
+        return;
+    }
+
+    bool intercambio = true;
+    while (intercambio) {
+        intercambio = false;
+        auto it1 = queue.begin();
+        auto it2 = next(queue.begin());
+
+        for (int i = 0; i < n - 1; i++) {
+            if (compararArboles(*it2, *it1)) {
+                swap(*it1, *it2);
+                intercambio = true;
+            }
+            ++it1;
+            ++it2;
         }
-        cout << "Datos del jugador guardados exitosamente en 'partida_guardada.txt'." << endl;
-    }else {
-        cout << "No se pudo abrir el archivo para guardar los datos del jugador." << endl;
+    }
+}
+
+list<int> buscarSecuencia(int ascii, Arbol arbol,list<int> secuencia){
+    if(arbol.getAscii()==ascii){
+        return secuencia;
+    }else if(arbol.getIzq().esta(ascii)){
+        secuencia.push_back(0);
+        buscarSecuencia(ascii,arbol.getIzq(),secuencia);
+    }else if (arbol.getDer().esta(ascii)){
+        secuencia.push_back(1);
+        buscarSecuencia(ascii,arbol.getDer(),secuencia);
     }
 }
 
@@ -500,15 +552,17 @@ void guardar_Comprimido(EstadoJuego partida) {
     string linea;
     list<Arbol> queue;
     while (getline(archivo, linea)) {
+
         int tamano = linea.size();
         char caracteres[tamano + 1];
-        linea.copy(caracteres, tamano);
+         linea.copy(caracteres, tamano);
         caracteres[tamano] = '\0';
 
 
         for (int i = 0; i < tamano; i++) {
             bool flag = false;
             int valor = static_cast<int>(caracteres[i]); // Convierte el carácter a valor ASCII
+
             for (auto it: queue) {
                 if (valor == it.getAscii()) {
                     flag = true;
@@ -520,12 +574,79 @@ void guardar_Comprimido(EstadoJuego partida) {
             }
         }
     }
-    //en teoría queue es una lista de arboles, cada uno siendo un caracter y su frecuencia
-    //se ordena de menor a mayor frecuencia
-    while(queue.size()>1){
-    }
     archivo.close();
+    //en teoría queue es una lista de arboles, cada uno siendo un caracter y su frecuencia
+    list<pair<int,int>> caracteres;
+    ordenarArboles(queue);
+
+    for(auto it : queue){
+        caracteres.push_front(pair<int,int>(it.getFrec(),it.getAscii()));
+    }
+
+    int n = queue.size();
+
+    while(queue.size()>1){
+        ordenarArboles(queue);
+        Arbol aux1 = queue.front();
+        queue.pop_front();
+        Arbol aux2 = queue.front();
+        queue.pop_front();
+        Arbol padre = Arbol(Nodo(aux1.getFrec()+aux2.getFrec()));
+        padre.setIzq(aux1);
+        padre.setDer(aux2);
+        queue.push_back(padre);
+    }
+    Arbol Hoffman = queue.front();
+
+    ofstream archivobin;
+    archivobin.open("partida.bin", ios::binary | ios::out);
+    if (archivobin.is_open()) {
+        short N = short (n);
+        archivobin.write(reinterpret_cast<char*>(&N), sizeof(N));
+
+        for(auto it : caracteres){
+            char c = static_cast<unsigned char >(it.second & 0xFF);
+            archivobin.write(reinterpret_cast<char*>(&c),sizeof(c));
+            long F = it.first;
+            archivobin.write(reinterpret_cast<char*>(&F),sizeof(F));
+        }
+        int w = Hoffman.getFrec();
+        archivobin.write(reinterpret_cast<char*>(&w),sizeof(w) );
+
+        ifstream archivo("partida_guardada.txt");
+        if (!archivo.is_open()) {
+            std::cerr << "No se pudo abrir el archivo " << std::endl;
+            return ;
+        }
+        int cont = 0;
+        while (getline(archivo, linea)) {
+            int tamano = linea.size();
+            char caracteres[tamano + 1];
+            linea.copy(caracteres, tamano);
+            caracteres[tamano+1] = '\0';
+            for (int i = 0; i < tamano; i++) {
+                int valor = static_cast<int>(caracteres[i]);
+                list<int> inicial = {};
+                Arbol ax = Hoffman.getIzq();
+
+                list<int> secuencia = buscarSecuencia(valor,Hoffman,inicial);
+                for(int it : secuencia){
+                    char c = static_cast<unsigned char >(it & 0xFF);
+                    archivobin.write(reinterpret_cast<char*>(&c),sizeof(c));
+                    cont+=sizeof(c);
+                }
+            }
+        }
+        while(cont%8!=0){
+            int cero = 0;
+            char c = static_cast<unsigned char >(cero & 0xFF);
+            archivobin.write(reinterpret_cast<char*>(&c),sizeof(c));
+            cont++;
+        }
+        archivo.close();
+        archivobin.close();
+        cout<<"guardar binario succesful";
+    }
+    archivobin.close();
 }
-
-
 

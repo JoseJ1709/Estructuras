@@ -34,18 +34,18 @@ public:
 
     //Consola//
 
-    int Turno(EstadoJuego *partida, list <Continente> continentes);
+    EstadoJuego* Turno(EstadoJuego* partida, list <Continente> continentes);
 
     //Archivo//
 
     int Turno(EstadoJuego &partida, string territorioAtacante, string territorioVictima, string nombreTerritorio,
               int unidadesAñadir, int unidades_mover, string territorio_recipiente, string seleccion);
 
-    void fortificar(list <Continente> continentes, EstadoJuego &partida);
+    EstadoJuego* fortificar(list <Continente> continentes, EstadoJuego* partida);
 
-    void atacar(EstadoJuego &partida);
+    EstadoJuego* atacar(EstadoJuego* partida);
 
-    void mover();
+    EstadoJuego* mover(EstadoJuego* partida);
 
      string getNombreJugador();
 
@@ -66,6 +66,8 @@ public:
     list <Territorio> getTerritoriosJugador();
 
     void setTerritoriosJugador(list <Territorio> &territoriosJugador);
+
+    void setTerritorioJugador(Territorio territorio);
 
 };
 

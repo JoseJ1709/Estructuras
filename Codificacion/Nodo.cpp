@@ -6,17 +6,19 @@
 
 Nodo::Nodo(Nodo *izq, Nodo *der) : izq(izq), der(der) {
 }
-
-
+Nodo::Nodo(int frecuencia, Nodo *izq, Nodo *der) :frecuencia(frecuencia), izq(izq), der(der) {
+}
 
 int Nodo::GetFrecuencia(){return frecuencia;}
 
-int Nodo::GetAscii(){return ascii;}
+int Nodo::GetAscii(){
 
+    return ascii;
+}
 
-Nodo *Nodo::GetIzq(){return izq;}
+Nodo* Nodo::GetIzq(){return izq;}
 
-Nodo *Nodo::GetDer(){return der;}
+Nodo* Nodo::GetDer(){return der;}
 
 void Nodo::setFrecuencia(int frecuencia) {
     Nodo::frecuencia = frecuencia;
@@ -33,3 +35,5 @@ void Nodo::setIzq(Nodo *izq) {
 void Nodo::setDer(Nodo *der) {
     Nodo::der = der;
 }
+
+

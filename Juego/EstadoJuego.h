@@ -22,8 +22,7 @@ private:
     list<Jugador>::iterator iterador_jugadores;
     int tarjetas_global;
 public:
-    EstadoJuego(){
-    };
+    EstadoJuego(){};
 
     int getTarjetasGlobal();
 
@@ -33,7 +32,7 @@ public:
     void setMazo(list<Tarjeta> mazo);
 
     void inicializar(list<Territorio>& territoriosDisponibles);
-    void turno(int id_jugador,list<Continente> continentes);
+    EstadoJuego* turno(int id_jugador,list<Continente> continentes);
 
      list<Jugador> getJugadores();
 

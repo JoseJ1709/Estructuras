@@ -8,11 +8,10 @@
 
 
 Arbol::Arbol(Nodo raiz) : raiz(raiz) {}
+Arbol::Arbol(Nodo* raiz) : raiz(*raiz) {}
 
 bool Arbol::isEmpty() {
-    if (raiz.GetDer() == nullptr && raiz.GetIzq() == nullptr){
-        return true;
-    }else{return false;}
+
 }
 int Arbol::getFrec() {
     return raiz.GetFrecuencia();
@@ -22,12 +21,14 @@ int Arbol::getAscii() {
     return raiz.GetAscii();
 }
 
-Nodo Arbol::getDer() {
-    return *raiz.GetDer();
+Arbol Arbol::getDer() {
+
+    Nodo ax = *raiz.GetDer();
+    return Arbol(ax);
 }
 
-Nodo Arbol::getIzq() {
-    return *raiz.GetIzq();
+Arbol Arbol::getIzq() {
+    return Arbol(*raiz.GetIzq());
 }
 
 void Arbol::setFrec(int frecuencia) {
@@ -44,4 +45,18 @@ void Arbol::setIzq(Arbol izq) {
 
 void Arbol::setDer(Arbol der) {
     raiz.setDer(&der.raiz);
+}
+bool Arbol::esta(int ascii) {
+    if(this->getAscii()==ascii){
+        return true;
+    }else if(this->isEmpty()){
+        return false;
+    }else if(this->getIzq().raiz.GetIzq() == nullptr && this->getDer().raiz.GetDer()!= nullptr){
+        return this->getDer().esta(ascii);
+    }
+    else if(this->getIzq().raiz.GetIzq() != nullptr && this->getDer().raiz.GetDer() == nullptr){
+        return this->getIzq().esta(ascii);
+    }else{
+        return this->getIzq().esta(ascii) || this->getDer().esta(ascii);
+    }
 };

@@ -7,6 +7,5 @@
 #include <stdlib.h>
 #include <time.h>
 int Dado::LanzarDado() {
-    srand (time(NULL));
     return rand()%6 + 1;
 }
