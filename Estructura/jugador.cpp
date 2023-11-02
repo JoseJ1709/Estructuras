@@ -418,6 +418,28 @@ EstadoJuego* Jugador::fortificar(list<Continente> continentes, EstadoJuego* part
     partida->setJugadores(aux2);
     return partida;
 }
+EstadoJuego* Jugador::fortificar(int unidades, int keyT, EstadoJuego *partida) {
+
+    list<Territorio> aux = this->getTerritoriosJugador();
+    for(auto it = aux.begin() ; it!=aux.end();it++){
+        if(it->getKeyTerritorio()== keyT){
+            Territorio auxt = *it;
+            auxt.setUnidadesDeEjercitoTerritorio(auxt.getUnidadesDeEjercitoTerritorio() + unidades);
+            *it = auxt;
+            cout << "OUD succesful" << endl;
+        }
+    }
+    this->setTerritoriosJugador(aux);
+    list<Jugador> aux2 = partida->getJugadores();
+    for(auto it =aux2.begin();it!=aux2.end();it++){
+        string nombre = this->getNombreJugador();
+        if(it->getNombreJugador()== nombre){
+            *it = *this;
+        }
+    }
+    partida->setJugadores(aux2);
+    return partida;
+}
 
 EstadoJuego* Jugador::atacar(EstadoJuego* partida) {
     cout<<"atacando"<< "\n";
@@ -460,7 +482,7 @@ EstadoJuego* Jugador::atacar(EstadoJuego* partida) {
                         do{
                             flag2= false;
                             cout << "Seleccione nombre de territorio que desea atacar ";
-                            cin >> seleccion;
+                            getline(cin,seleccion);
                             for(string it2:territoriosAtacables)
                                 if(seleccion==it2){
                                     flag2=true;
@@ -562,7 +584,14 @@ EstadoJuego* Jugador::atacar(EstadoJuego* partida) {
                         }while(!flag2);
                         Territorio defensor = *itt;
                         defensor.setUnidadesDeEjercitoTerritorio(tropas);
-                        *itt = defensor;
+
+                        list<Territorio> territoriosAux = this->getTerritoriosJugador();
+                        territoriosAux.push_back(defensor);
+                        this->setTerritoriosJugador(territoriosAux);
+
+                        list<Territorio> territoriosAux2 = it->getTerritoriosJugador();
+                        itt = territoriosAux2.erase(itt);
+                        it->setTerritoriosJugador(territoriosAux2);
                         //dar tarjeta
                         list<Tarjeta> mazo = partida->getMazo();
                         list<Tarjeta>::iterator itT = mazo.begin();
@@ -570,6 +599,7 @@ EstadoJuego* Jugador::atacar(EstadoJuego* partida) {
                         tarjetas_jugador.push_back(tarjetaObtenida);
                         mazo.pop_front();
                         partida->setMazo(mazo);
+
                         list<Jugador> aux2 = partida->getJugadores();
                         for(auto it3 =aux2.begin();it3!=aux2.end();it3++){
                             string nombre = this->getNombreJugador();
@@ -618,6 +648,109 @@ EstadoJuego* Jugador::atacar(EstadoJuego* partida) {
         }
     }while(flag);
     cout << "Ataque terminado" << endl;
+    return partida;
+}
+EstadoJuego* Jugador::atacar(EstadoJuego *partida, int origen, int destino, int DR1, int DR2, int DR3, int DB1,
+                             int DB2,int keyDer, int uAgregar) {
+    int territorioAtacante = origen;
+    int territorioVictima = destino;
+    list<int> dadosA = { DR1,DR2,DR3};
+    list<int> dadosD = { DB1,DB2};
+    dadosA.sort(greater<int>());
+    dadosD.sort(greater<int>());
+    auto itA = dadosA.begin();
+    auto itD = dadosD.begin();
+    int restarAtacante = 0;
+    int restarDefensor = 0;
+    for(int i = 0 ; i < 2; i++,itA++,itD++) {
+        if (*itA > *itD) {
+            restarDefensor++;
+        } else if( *itA <= *itD){
+            restarAtacante++;
+        }
+    }
+    //quitar al atacante
+    bool flag2 = false;
+    int restantes;
+    int tropas = 0;
+    Territorio atacante;
+    //quitar tropas al atacante
+    list<Territorio> aux = this->getTerritoriosJugador();
+    for(auto it=aux.begin(); it != aux.end(); it++) {
+        if (territorioAtacante == it->getKeyTerritorio()) {
+            atacante = *it;
+            if (it->getUnidadesDeEjercitoTerritorio() - restarAtacante <= 1) {
+                it->setUnidadesDeEjercitoTerritorio(1);
+            }else
+                it->setUnidadesDeEjercitoTerritorio(it->getUnidadesDeEjercitoTerritorio() - restarAtacante);
+            restantes=it->getUnidadesDeEjercitoTerritorio();
+        }
+    }
+    this->setTerritoriosJugador(aux);
+    list<Jugador> aux2 = partida->getJugadores();
+    for(auto it =aux2.begin();it!=aux2.end();it++){
+        string nombre = this->getNombreJugador();
+        if(it->getNombreJugador()== nombre){
+            *it = *this;
+        }
+    }
+    partida->setJugadores(aux2);
+    //quitar defensor
+    list<Jugador> jugadores = partida->getJugadores();
+    for(auto it=jugadores.begin();it!=jugadores.end();it++){
+        list<Territorio> aux = it->territorios_jugador;
+        for(auto itt=aux.begin();itt!=aux.end();itt++) {
+            if (territorioVictima == itt->getKeyTerritorio()) {
+                if (itt->getUnidadesDeEjercitoTerritorio() - restarDefensor <= 0) {
+                    list<Territorio > aux3 = this->getTerritoriosJugador();
+                    for(auto it2 = aux3.begin();it2!= aux3.end();it2++){
+                        if(it2->getKeyTerritorio() == atacante.getKeyTerritorio()){
+                            atacante.setUnidadesDeEjercitoTerritorio(atacante.getUnidadesDeEjercitoTerritorio()  - uAgregar);
+                            *it2 = atacante;
+                        }
+                    }
+                    this->setTerritoriosJugador(aux3);
+
+                    tropas = uAgregar;
+                    Territorio defensor = *itt;
+                    defensor.setUnidadesDeEjercitoTerritorio(tropas);
+
+                    list<Territorio> territoriosAux = this->getTerritoriosJugador();
+                    territoriosAux.push_back(defensor);
+                    this->setTerritoriosJugador(territoriosAux);
+
+                    list<Territorio> territoriosAux2 = it->getTerritoriosJugador();
+                    itt = territoriosAux2.erase(itt);
+                    it->setTerritoriosJugador(territoriosAux2);
+
+                    list<Jugador> aux2 = partida->getJugadores();
+                    for(auto it3 =aux2.begin();it3!=aux2.end();it3++){
+                        string nombre = this->getNombreJugador();
+                        if(it3->getNombreJugador()== nombre){
+                            *it3 = *this;
+                        }
+                    }
+                    partida->setJugadores(aux2);
+
+                }else{
+                    Territorio defensor = *itt;
+                    defensor.setUnidadesDeEjercitoTerritorio(defensor.getUnidadesDeEjercitoTerritorio() - restarDefensor);
+                    *itt = defensor;
+                }
+                it->setTerritoriosJugador(aux);
+                list<Jugador> aux3 = partida->getJugadores();
+                for(auto it1 =aux3.begin();it1!=aux3.end();it1++){
+                    string nombre = it->getNombreJugador();
+                    if(it1->getNombreJugador()== nombre){
+                        *it1 = *it;
+                    }
+                }
+                partida->setJugadores(aux3);
+            }
+        }
+    }
+
+    cout << "ATK succesful" << endl;
     return partida;
 }
 
@@ -733,6 +866,47 @@ EstadoJuego* Jugador::mover(EstadoJuego* partida) {
     return partida;
 }
 
+EstadoJuego* Jugador::mover(EstadoJuego* partida, int origen, int destino, int unidades){
+    list<Territorio> aux = this->getTerritoriosJugador();
+    for(auto it = aux.begin() ; it!= aux.end();it++){
+        if(it->getKeyTerritorio()== origen){
+            list<string> adyacentes = it->getTerritoriosAlrededor();
+            Territorio Quitar = *it;
+            Quitar.setUnidadesDeEjercitoTerritorio(Quitar.getUnidadesDeEjercitoTerritorio() - unidades);
+            *it = Quitar;
+            for(auto itA : adyacentes){
+
+                this->setTerritoriosJugador(aux);
+                list<Territorio> aux2 = this->getTerritoriosJugador();
+                for(auto it2 = aux2.begin() ; it2!= aux2.end();it2++){
+                    if(it2->getNombreTerritorio() == itA && it2->getKeyTerritorio() == destino){
+                        Territorio Agregar = *it2;
+                        Agregar.setUnidadesDeEjercitoTerritorio(Agregar.getUnidadesDeEjercitoTerritorio() + unidades);
+                        *it2 = Agregar;
+
+                        this->setTerritoriosJugador(aux2);
+
+                        list<Jugador> aux3 = partida->getJugadores();
+                        for(auto it3 =aux3.begin();it3!=aux3.end();it3++){
+                            if(it3->getNombreJugador()== this->getNombreJugador()){
+                                *it3 = *this;
+                            }
+                        }
+                        partida->setJugadores(aux3);
+                        cout << "FRT succesful" << endl;
+                        return partida;
+                    }
+                }
+            }
+            Quitar.setUnidadesDeEjercitoTerritorio(Quitar.getUnidadesDeEjercitoTerritorio() - unidades);
+            *it = Quitar;
+            cout << "el territorio destino no es adyacente al origen o no le pertenece al jugador" << endl;
+        }
+    }
+
+    cout << "FRT not succesful" << endl;
+    return partida;
+}
 string Jugador::getNombreJugador() {
     return nombre_jugador;
 }

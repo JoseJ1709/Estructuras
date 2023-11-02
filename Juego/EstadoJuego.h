@@ -42,6 +42,11 @@ public:
 
     void setIteradorJugadores( list<Jugador>::iterator &iteradorJugadores);
 
+    EstadoJuego* fortificar(string color,int unidades,int key);
+    EstadoJuego* atacar(string color,int origen, int destino, int DR1,int DR2, int DR3, int DB1, int DB2);
+    EstadoJuego* atacar(string color,int origen, int destino, int DR1,int DR2, int DR3, int DB1, int DB2,int keyDer, int uAgregar);
+    EstadoJuego* mover(string color, int origen, int destino, int unidades);
+
 };
 
 #endif //ESTRUCTURAS_ESTADOJUEGO_H

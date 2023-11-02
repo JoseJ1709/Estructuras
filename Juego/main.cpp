@@ -131,51 +131,51 @@ EstadoJuego* inicializarJuego(list<Tarjeta> lista_tarjetas, list<Territorio> ter
 }
 
 EstadoJuego* inicializar_a( list<Territorio> territorios,list<Tarjeta> tarjetas) {
-    EstadoJuego* respuesta  = new EstadoJuego();
+    EstadoJuego *respuesta = new EstadoJuego();
     cout << "Inicializando el juego del archivo " << endl;
     ifstream tablero("/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Juego/Tablero.txt");
-    if(tablero.is_open()){
+    if (tablero.is_open()) {
         string linea;
-        getline(tablero,linea);
+        getline(tablero, linea);
         int nJugadores = stoi(linea);
-        for(int i = 0 ; i < nJugadores ; i++){
-            getline(tablero,linea);
+        for (int i = 0; i < nJugadores; i++) {
+            getline(tablero, linea);
             istringstream linea1(linea);
             string token;
             char separador[] = ";";
-            getline(linea1,token, separador[0]);
+            getline(linea1, token, separador[0]);
             string nombre = token;
-            getline(linea1,token, separador[0]);
+            getline(linea1, token, separador[0]);
             string color = token;
-            getline(linea1,token, separador[0]);
+            getline(linea1, token, separador[0]);
             int nTerritorios = stoi(token);
-            int id = i+1;
-            Jugador jugadorActual = Jugador(nombre,color,id);
-            for(int j = 0 ; j< nTerritorios ; j++){
-                getline(linea1,token, separador[0]);
+            int id = i + 1;
+            Jugador jugadorActual = Jugador(nombre, color, id);
+            for (int j = 0; j < nTerritorios; j++) {
+                getline(linea1, token, separador[0]);
                 int keyT = stoi(token);
                 Territorio territorioaux;
-                for(auto it : territorios ){
-                    if(it.getKeyTerritorio() == keyT) {
+                for (auto it: territorios) {
+                    if (it.getKeyTerritorio() == keyT) {
                         territorioaux = it;
                         break;
                     }
                 }
-                getline(linea1,token, separador[0]);
+                getline(linea1, token, separador[0]);
                 territorioaux.setUnidadesDeEjercitoTerritorio(stoi(token));
                 list<Territorio> actualT = jugadorActual.getTerritoriosJugador();
                 actualT.push_back(territorioaux);
                 jugadorActual.setTerritoriosJugador(actualT);
             }
-            getline(linea1,token, separador[0]);
+            getline(linea1, token, separador[0]);
             int nCartas = stoi(token);
-            for(int j = 0 ; j < nCartas ; j++){
-                getline(linea1,token, separador[0]);
+            for (int j = 0; j < nCartas; j++) {
+                getline(linea1, token, separador[0]);
                 int keyT = stoi(token);
-                for(auto it = tarjetas.begin();it != tarjetas.end();it++){
-                    if(it->getIdTarjeta() == keyT){
+                for (auto it = tarjetas.begin(); it != tarjetas.end(); it++) {
+                    if (it->getIdTarjeta() == keyT) {
                         jugadorActual.getTarjetasJugador().push_back(*it);
-                        it=tarjetas.erase(it);
+                        it = tarjetas.erase(it);
                     }
                 }
             }
@@ -185,18 +185,68 @@ EstadoJuego* inicializar_a( list<Territorio> territorios,list<Tarjeta> tarjetas)
             respuesta->setMazo(tarjetas);
         }
         tablero.close();
-    }else{
-        cout << "no pude abrir el archivo " << endl;
+    } else {
+        cout << "no pude abrir el archivo de tablero" << endl;
     }
-    return respuesta;
-    ifstream jugadas("Jugadas.txt");
-    if(jugadas.is_open()){
+    ifstream jugadas("/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Juego/Jugadas.txt");
+    if (jugadas.is_open()) {
         string linea;
-        getline(tablero,linea);
-    }
-    return respuesta;
-}
+        getline(jugadas, linea);//linea inutil de ejemplo (quitar si necesario)
 
+        while (getline(jugadas, linea)) {
+            istringstream linea1(linea);
+            string token;
+            char separador[] = ";";
+            getline(linea1, token, separador[0]);
+            string color = token;
+            getline(linea1, token, separador[0]);
+            string jugada = token;
+            if (jugada == "OUD") {
+                getline(linea1, token, separador[0]);
+                int unidades = stoi(token);
+                getline(linea1, token, separador[0]);
+                int keyT = stoi(token);
+                respuesta = respuesta->fortificar(color, unidades, keyT);
+            }else if(jugada == "ATK"){
+                getline(linea1,token, separador[0]);
+                int origenA = stoi(token);
+                getline(linea1,token, separador[0]);
+                int destinoA = stoi(token);
+                getline(linea1,token, separador[0]);
+                int DR1 = stoi(token);
+                getline(linea1,token, separador[0]);
+                int DR2 = stoi(token);
+                getline(linea1,token, separador[0]);
+                int DR3 = stoi(token);
+                getline(linea1,token, separador[0]);
+                int DB1 = stoi(token);
+                getline(linea1,token, separador[0]);
+                int DB2 = stoi(token);
+                getline(linea1,token, separador[0]);
+                if(token.empty()){
+                    respuesta = respuesta->atacar(color,origenA,destinoA,DR1,DR2,DR3,DB1,DB2);
+                }else{
+                    int keyDerrotada = stoi(token);
+                    getline(linea1,token, separador[0]);
+                    int uAgregar = stoi(token);
+                    respuesta = respuesta->atacar(color,origenA,destinoA,DR1,DR2,DR3,DB1,DB2,keyDerrotada,uAgregar);
+                }
+            }else if(jugada == "FRT"){
+                getline(linea1,token, separador[0]);
+                int origen = stoi(token);
+                getline(linea1,token, separador[0]);
+                int destino = stoi(token);
+                getline(linea1,token, separador[0]);
+                int Unidades = stoi(token);
+                respuesta = respuesta->mover(color, origen, destino, Unidades);
+            }
+        }
+        jugadas.close();
+        return respuesta;
+    }else{
+        cout << "no se puede leer archivo de jugadas" << endl;
+    }
+}
 void ayuda() {
     cout << "Lista de comandos disponibles:" << endl;
     cout << "  ayuda " << endl;

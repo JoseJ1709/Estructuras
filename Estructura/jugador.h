@@ -42,14 +42,15 @@ public:
               int unidadesAñadir, int unidades_mover, string territorio_recipiente, string seleccion);
 
     EstadoJuego* fortificar(list <Continente> continentes, EstadoJuego* partida);
-    EstadoJuego* fortificar(int unidades, int ketT,EstadoJuego* partida);
+    EstadoJuego* fortificar(int unidades, int keyT,EstadoJuego* partida);
 
     EstadoJuego* atacar(EstadoJuego* partida);
-    EstadoJuego* atacar(EstadoJuego* partida, int origen, int destino, int DR1,int DR2, int DR3, int DB1, int DB2);
+    EstadoJuego* atacar(EstadoJuego* partida, int origen, int destino, int DR1,int DR2, int DR3, int DB1, int DB2,int keyDer,int uAgregar);
 
     EstadoJuego* mover(EstadoJuego* partida);
-    EstadoJuego* mover(EstadoJuego* partida,int origen, int destino);
-     string getNombreJugador();
+    EstadoJuego* mover(EstadoJuego* partida,int origen, int destino,int unidades);
+
+    string getNombreJugador();
 
     void setNombreJugador(string &nombreJugador);
 

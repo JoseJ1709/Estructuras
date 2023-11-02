@@ -195,3 +195,42 @@ int EstadoJuego::getTarjetasGlobal() {
 void EstadoJuego::setTarjetasGlobal(int tarjetasGlobal) {
     tarjetas_global = tarjetasGlobal;
 }
+
+EstadoJuego *EstadoJuego::fortificar(string color, int unidades, int key) {
+    for (Jugador jugador : jugadores) {
+        if (jugador.getColorJugador() == color) {
+            EstadoJuego* juego = new EstadoJuego();
+            juego = jugador.fortificar(unidades,key,this);
+            return juego;
+        }
+    }
+}
+
+EstadoJuego *EstadoJuego::atacar(string color, int origen, int destino, int DR1, int DR2, int DR3, int DB1, int DB2) {
+    for (Jugador jugador : jugadores) {
+        if (jugador.getColorJugador() == color) {
+            EstadoJuego* juego = new EstadoJuego();
+            juego = jugador.atacar(this,origen,destino,DR1,DR2,DR3,DB1,DB2,0,0);
+            return juego;
+        }
+    }
+}
+EstadoJuego *EstadoJuego::atacar(string color, int origen, int destino, int DR1, int DR2, int DR3, int DB1, int DB2,int keyDer,int uAgregar) {
+    for (Jugador jugador : jugadores) {
+        if (jugador.getColorJugador() == color) {
+            EstadoJuego* juego = new EstadoJuego();
+            juego = jugador.atacar(this,origen,destino,DR1,DR2,DR3,DB1,DB2,keyDer,uAgregar);
+            return juego;
+        }
+    }
+}
+
+EstadoJuego *EstadoJuego::mover(string color, int origen, int destino, int unidades) {
+    for (Jugador jugador : jugadores) {
+        if (jugador.getColorJugador() == color) {
+            EstadoJuego* juego = new EstadoJuego();
+            juego = jugador.mover(this,origen,destino,unidades);
+            return juego;
+        }
+    }
+}
