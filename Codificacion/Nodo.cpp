@@ -8,7 +8,18 @@ Nodo::Nodo(Nodo *izq, Nodo *der) : izq(izq), der(der) {
 }
 Nodo::Nodo(int frecuencia, Nodo *izq, Nodo *der) :frecuencia(frecuencia), izq(izq), der(der) {
 }
-
+Nodo::Nodo(int frec, int Ascii) {
+        frecuencia =frec;
+        ascii=Ascii;
+        izq=NULL;
+        der=NULL;
+}
+Nodo::Nodo(int frec) {
+    frecuencia =frec;
+    ascii=-1;
+    izq=NULL;
+    der=NULL;
+}
 int Nodo::GetFrecuencia(){return frecuencia;}
 
 int Nodo::GetAscii(){

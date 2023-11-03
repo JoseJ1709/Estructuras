@@ -58,6 +58,7 @@ void EstadoJuego::inicializar(list<Territorio>& territoriosDisponibles) {
             infanteriasPorJugador = 20;
             break;
     }
+    /*
     list<string> adyacentes2 = {"p1"};
     list<string> adyacentes1 = {"p2","p4"};
     Territorio aux1 = Territorio(1, 1, "p1", 0);
@@ -72,7 +73,7 @@ void EstadoJuego::inicializar(list<Territorio>& territoriosDisponibles) {
     territoriosDisponibles.push_back(aux2);
     territoriosDisponibles.push_back(aux3);
     territoriosDisponibles.push_back(aux4);
-
+    */
 
     list<Jugador>::iterator itj = this->jugadores.begin();
     while (!territoriosDisponibles.empty()) {

@@ -62,7 +62,7 @@ int main() {
 
         if (comando == "ayuda") {
             comando1 = 0;
-        } else if (comando == "nuevo juego") {
+        } else if (comando == "iniciar nuevo juego") {
             comando1 = 1;
         } else if (comando == "Cargar archivo") {
             comando1 = 2;
@@ -89,12 +89,7 @@ int main() {
                 ayuda();
                 break;
             case 1:
-                if (nuevo == false){
-                    partida = inicializarJuego(tarjetas, territorios);
-                    nuevo = true;
-                } else{
-                    cout<<"ya tienes una partida en curso";
-                }
+                partida = inicializarJuego(tarjetas, territorios);
                 break;
             case 2:
                 partida = inicializar_a(territorios,tarjetas);
@@ -647,6 +642,8 @@ list<int> buscarSecuencia(int ascii, Arbol arbol,list<int> secuencia){
     }else if (arbol.getDer().esta(ascii)){
         secuencia.push_back(1);
         buscarSecuencia(ascii,arbol.getDer(),secuencia);
+    }else{
+        return secuencia;
     }
 }
 
@@ -680,7 +677,8 @@ void guardar_Comprimido(EstadoJuego partida) {
                 }
             }
             if (!flag) {
-                queue.push_back(Arbol(Nodo(1, valor)));
+                Nodo* nuevo =new  Nodo(1,valor);
+                queue.push_back(Arbol(nuevo));
             }
         }
     }
@@ -701,7 +699,8 @@ void guardar_Comprimido(EstadoJuego partida) {
         queue.pop_front();
         Arbol aux2 = queue.front();
         queue.pop_front();
-        Arbol padre = Arbol(Nodo(aux1.getFrec()+aux2.getFrec()));
+        Nodo* p= new Nodo(aux1.getFrec()+aux2.getFrec());
+        Arbol padre = Arbol(p);
         padre.setIzq(aux1);
         padre.setDer(aux2);
         queue.push_back(padre);
@@ -711,57 +710,64 @@ void guardar_Comprimido(EstadoJuego partida) {
     ofstream archivobin;
     archivobin.open("partida.bin", ios::binary | ios::out);
     if (archivobin.is_open()) {
-        string a = "hola";
-    archivobin.write(reinterpret_cast<char*>(&a), sizeof(a) );
-    }
-        /*
-        short N = short (n);
-        archivobin.write(reinterpret_cast<char*>(&N), sizeof(N));
 
-        for(auto it : caracteres){
+        short N = short(n);
+        archivobin.write(reinterpret_cast<char *>(&N), sizeof(N));
+
+        for (auto it: caracteres) {
             char c = static_cast<unsigned char >(it.second & 0xFF);
-            archivobin.write(reinterpret_cast<char*>(&c),sizeof(c));
+            archivobin.write(reinterpret_cast<char *>(&c), sizeof(c));
             long F = it.first;
-            archivobin.write(reinterpret_cast<char*>(&F),sizeof(F));
+            archivobin.write(reinterpret_cast<char *>(&F), sizeof(F));
         }
-        int w = Hoffman.getFrec();
-        archivobin.write(reinterpret_cast<char*>(&w),sizeof(w) );
 
-        ifstream archivo("partida_guardada.txt");
-        if (!archivo.is_open()) {
-            std::cerr << "No se pudo abrir el archivo 2" << std::endl;
-            return ;
+        long w = Hoffman.getFrec();
+
+        archivobin.write(reinterpret_cast<char *>(&w), sizeof(w));
+
+        ifstream archivo2("partida_guardada.txt");
+        if (!archivo2.is_open()) {
+            cout << "No se pudo abrir el archivo 2" << endl;
+            return;
         }
+
         int cont = 0;
         while (getline(archivo, linea)) {
+
             int tamano = linea.size();
             char caracteres[tamano + 1];
             linea.copy(caracteres, tamano);
-            caracteres[tamano+1] = '\0';
+            caracteres[tamano + 1] = '\0';
+
             for (int i = 0; i < tamano; i++) {
                 int valor = static_cast<int>(caracteres[i]);
-                list<int> inicial = {};
-                Arbol ax = Hoffman.getIzq();
 
-                list<int> secuencia = buscarSecuencia(valor,Hoffman,inicial);
-                for(int it : secuencia){
+                list<int> inicial = {};
+
+                list<int> secuencia = buscarSecuencia(valor, Hoffman, inicial);
+
+                for (int it: secuencia) {
                     char c = static_cast<unsigned char >(it & 0xFF);
-                    archivobin.write(reinterpret_cast<char*>(&c),sizeof(c));
-                    cont+=sizeof(c);
+                    archivobin.write(reinterpret_cast<char *>(&c), sizeof(c));
+                    cont ++;
                 }
+
             }
         }
-        while(cont%8!=0){
+
+        while (cont % 8 != 0) {
             int cero = 0;
             char c = static_cast<unsigned char >(cero & 0xFF);
-            archivobin.write(reinterpret_cast<char*>(&c),sizeof(c));
+            archivobin.write(reinterpret_cast<char *>(&c), sizeof(c));
             cont++;
         }
-        archivo.close();
-        archivobin.close();
-        cout<<"guardar binario succesful" << endl;
-    }*/
+
+        cout << "guardar binario succesful" << endl;
+    }else{
+        cout << "no se pudo abrir archivo bianrio" << endl;
+    }
     archivo.close();
     archivobin.close();
 }
+
 

@@ -11,11 +11,12 @@
 using namespace std;
 class Arbol {
 private:
-    Arbol(Nodo *raiz);
-
-    Nodo raiz;
+    Nodo* raiz;
 public:
-    Arbol(Nodo raiz);
+    Arbol(Nodo *raiz);
+    Arbol(){
+        raiz=NULL;
+    };
     bool isEmpty();
     int getFrec();
     int getAscii();
