@@ -26,6 +26,7 @@ using namespace std;
 void ayuda();
 EstadoJuego* inicializarJuego(list<Tarjeta> lista_tarjetas, list<Territorio> territorios);
 EstadoJuego* inicializar_a(list<Territorio> territorios, list<Tarjeta> tarjetas);
+EstadoJuego* inicializar_b(list<Territorio> territorios, list<Tarjeta> tarjetas);
 void Guardartxt(EstadoJuego partida);
 void GuardarJugador(const Jugador jugador);
 void guardar_Comprimido(EstadoJuego);
@@ -64,19 +65,21 @@ int main() {
             comando1 = 0;
         } else if (comando == "iniciar nuevo juego") {
             comando1 = 1;
-        } else if (comando == "Cargar archivo") {
+        } else if (comando == "Cargar archivotxt") {
             comando1 = 2;
-        } else if (comando == "Guardartxt") {
+        }else if (comando == "Cargar archivobin") {
             comando1 = 3;
-        } else if (comando == "Guardarbin") {
+        } else if (comando == "Guardartxt") {
             comando1 = 4;
+        } else if (comando == "Guardarbin") {
+            comando1 = 5;
         }else {
             string numero = extraerNumeroTurno(comando);
             if (numero != "") {
-                comando1 = 5;
+                comando1 = 6;
                 numeroTurno = stoi(numero);
             } else if (comando == "salir") {
-                comando1 = 6;
+                comando1 = 7;
             } else {
                 cout << "Comando no reconocido. 0 para ver la lista de comandos." << endl;
                 continue;
@@ -95,15 +98,18 @@ int main() {
                 partida = inicializar_a(territorios,tarjetas);
                 break;
             case 3:
-                Guardartxt(*partida);
+                partida = inicializar_b(territorios,tarjetas);
                 break;
             case 4:
-                guardar_Comprimido(*partida);
+                Guardartxt(*partida);
                 break;
             case 5:
-                partida = partida->turno(numeroTurno,continentes);
+                guardar_Comprimido(*partida);
                 break;
             case 6:
+                partida = partida->turno(numeroTurno,continentes);
+                break;
+            case 7:
                 salir();
             default:
                 cout<<"comando no reconocido";
@@ -115,8 +121,59 @@ void salir() {
     cout << "Saliendo del juego..." << endl;
     exit(0);
 }
+bool compararArboles(Arbol arbol1, Arbol arbol2) {
+    return arbol1.getFrec() < arbol2.getFrec();
+}
+void ordenarArboles(list<Arbol> &queue) {
+    int n = queue.size();
+    if (n <= 1) {
+        return;
+    }
 
+    bool intercambio = true;
+    while (intercambio) {
+        intercambio = false;
+        auto it1 = queue.begin();
+        auto it2 = next(queue.begin());
 
+        for (int i = 0; i < n - 1; i++) {
+            if (compararArboles(*it2, *it1)) {
+                swap(*it1, *it2);
+                intercambio = true;
+            }
+            ++it1;
+            ++it2;
+        }
+    }
+}
+int recuperarAscii(Arbol Hoffman,list<int> secuencia){
+    Arbol aux = Hoffman;
+    for(int i : secuencia){
+        if(i == 1){
+            aux = aux.getDer();
+        }else if(i == 0){
+            aux = aux.getIzq();
+        }
+    }
+    return aux.getAscii();
+}
+
+bool buscarSecuencia(Arbol Hoffman, list<int> secuencia){
+    Arbol aux = Hoffman;
+    for(int i : secuencia){
+        if(i == 1){
+            aux = aux.getDer();
+        }else if(i == 0){
+            aux = aux.getIzq();
+        }
+    }
+
+    if(aux.getAscii()==-1){
+        return true;
+    }else{
+        return false;
+    }
+}
 EstadoJuego* inicializarJuego(list<Tarjeta> lista_tarjetas, list<Territorio> territorios){
     EstadoJuego* juego = new EstadoJuego();
     juego->setMazo(lista_tarjetas);
@@ -183,6 +240,7 @@ EstadoJuego* inicializar_a( list<Territorio> territorios,list<Tarjeta> tarjetas)
     } else {
         cout << "no pude abrir el archivo de tablero" << endl;
     }
+
     ifstream jugadas("/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Juego/Jugadas.txt");
     if (jugadas.is_open()) {
         string linea;
@@ -242,13 +300,129 @@ EstadoJuego* inicializar_a( list<Territorio> territorios,list<Tarjeta> tarjetas)
         cout << "no se puede leer archivo de jugadas" << endl;
     }
 }
+EstadoJuego* inicializar_a( list<Territorio> territorios,list<Tarjeta> tarjetas,string Archivo) {
+    EstadoJuego *respuesta = new EstadoJuego();
+    cout << "Inicializando el juego del archivo " << endl;
+    ifstream tablero(Archivo);
+    if (tablero.is_open()) {
+        string linea;
+        getline(tablero, linea);
+        int nJugadores = stoi(linea);
+        for (int i = 0; i < nJugadores; i++) {
+            getline(tablero, linea);
+            istringstream linea1(linea);
+            string token;
+            char separador[] = ";";
+            getline(linea1, token, separador[0]);
+            string nombre = token;
+            getline(linea1, token, separador[0]);
+            string color = token;
+            getline(linea1, token, separador[0]);
+            int nTerritorios = stoi(token);
+            int id = i + 1;
+            Jugador jugadorActual = Jugador(nombre, color, id);
+            for (int j = 0; j < nTerritorios; j++) {
+                getline(linea1, token, separador[0]);
+                int keyT = stoi(token);
+                Territorio territorioaux;
+                for (auto it: territorios) {
+                    if (it.getKeyTerritorio() == keyT) {
+                        territorioaux = it;
+                        break;
+                    }
+                }
+                getline(linea1, token, separador[0]);
+                territorioaux.setUnidadesDeEjercitoTerritorio(stoi(token));
+                list<Territorio> actualT = jugadorActual.getTerritoriosJugador();
+                actualT.push_back(territorioaux);
+                jugadorActual.setTerritoriosJugador(actualT);
+            }
+            getline(linea1, token, separador[0]);
+            int nCartas = stoi(token);
+            for (int j = 0; j < nCartas; j++) {
+                getline(linea1, token, separador[0]);
+                int keyT = stoi(token);
+                for (auto it = tarjetas.begin(); it != tarjetas.end(); it++) {
+                    if (it->getIdTarjeta() == keyT) {
+                        jugadorActual.getTarjetasJugador().push_back(*it);
+                        it = tarjetas.erase(it);
+                    }
+                }
+            }
+            list<Jugador> actualJ = respuesta->getJugadores();
+            actualJ.push_back(jugadorActual);
+            respuesta->setJugadores(actualJ);
+            respuesta->setMazo(tarjetas);
+        }
+        tablero.close();
+    } else {
+        cout << "no pude abrir el archivo de tablero" << endl;
+    }
+}
+EstadoJuego* inicializar_b( list<Territorio> territorios,list<Tarjeta> tarjetas){
+    EstadoJuego *respuesta = new EstadoJuego();
+    cout << "Inicializando el juego del archivo " << endl;
+    ifstream tablero("/home/jose/Documentos/Estructuras/Proyecto/Estructuras/cmake-build-debug/partida.bin");
+    ofstream archivoaux("/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Juego/aux.txt");
+
+    if (tablero.is_open()&&archivoaux.is_open()) {
+        list<Arbol> queue;
+        short N;
+        tablero.read(reinterpret_cast<char *>(&N), sizeof(N));
+        for (int i = 0; i < N; i++) {
+            char caracter;
+            long frecuencia;
+            tablero.read(&caracter, sizeof (caracter));
+            tablero.read(reinterpret_cast<char*>(&frecuencia), sizeof (frecuencia));
+            Nodo* aux = new Nodo(frecuencia,caracter);
+            Arbol auxArbol = Arbol(aux);
+            queue.push_back(auxArbol);
+        }
+        while(queue.size()>1){
+            ordenarArboles(queue);
+            Arbol aux1 = queue.front();
+            queue.pop_front();
+            Arbol aux2 = queue.front();
+            queue.pop_front();
+            Nodo* p= new Nodo(aux1.getFrec()+aux2.getFrec());
+            Arbol padre = Arbol(p);
+            padre.setIzq(aux1);
+            padre.setDer(aux2);
+            queue.push_back(padre);
+        }
+        Arbol Hoffman = queue.front();
+        long w;
+        bool flag = true;
+        tablero.read(reinterpret_cast<char*>(&w), sizeof(w));
+        string codigoBinario = "";
+        char byte;
+        while(tablero.get(byte)){
+            for(int i = 7 ; i > 0 ; i--){
+                if( byte << i == 1){
+                    codigoBinario += '1';
+                } else if(byte << i == 0){
+                    codigoBinario += '0';
+                }
+            }
+        }
+
+
+        archivoaux.close();
+        inicializar_a(territorios,tarjetas,"/home/jose/Documentos/Estructuras/Proyecto/Estructuras/Juego/aux.txt");
+        tablero.close();
+    }else {
+        cout << "no pude abrir el archivo de tablero" << endl;
+    }
+
+}
 void ayuda() {
     cout << "Lista de comandos disponibles:" << endl;
     cout << "  ayuda " << endl;
     cout << "  iniciar nuevo juego " << endl;
-    cout << "  Cargar archivo " << endl;
-    cout << "  guardar partida en formato .txt " << endl;
-    cout << "  guardar partida en formato .bin " << endl;
+    cout << "  Cargar archivotxt" << endl;
+    cout << "  Cargar archivobin" << endl;
+    cout << "  Guardartxt " << endl;
+    cout << "  Guardarbin " << endl;
     cout << "  Turno <id jugador>" << endl;
     cout << "  salir" << endl;
 }
@@ -606,36 +780,11 @@ void Guardartxt(EstadoJuego partida){
         cout << "No se pudo abrir el archivo para guardar los datos del jugador." << endl;
     }
 }
-bool compararArboles(Arbol arbol1, Arbol arbol2) {
-    return arbol1.getFrec() < arbol2.getFrec();
-}
 
-void ordenarArboles(list<Arbol> &queue) {
-    int n = queue.size();
-    if (n <= 1) {
-        return;
-    }
 
-    bool intercambio = true;
-    while (intercambio) {
-        intercambio = false;
-        auto it1 = queue.begin();
-        auto it2 = next(queue.begin());
-
-        for (int i = 0; i < n - 1; i++) {
-            if (compararArboles(*it2, *it1)) {
-                swap(*it1, *it2);
-                intercambio = true;
-            }
-            ++it1;
-            ++it2;
-        }
-    }
-}
-
-list<int> buscarSecuencia(int ascii, Arbol arbol,list<int> secuencia){
+void buscarSecuencia(int ascii, Arbol arbol,list<int> &secuencia){
     if(arbol.getAscii()==ascii){
-        return secuencia;
+        return ;
     }else if(arbol.getIzq().esta(ascii)){
         secuencia.push_back(0);
         buscarSecuencia(ascii,arbol.getIzq(),secuencia);
@@ -643,7 +792,7 @@ list<int> buscarSecuencia(int ascii, Arbol arbol,list<int> secuencia){
         secuencia.push_back(1);
         buscarSecuencia(ascii,arbol.getDer(),secuencia);
     }else{
-        return secuencia;
+        return ;
     }
 }
 
@@ -651,6 +800,7 @@ void guardar_Comprimido(EstadoJuego partida) {
     Guardartxt(partida);
 
     ifstream archivo("partida_guardada.txt");
+
     if (!archivo.is_open()) {
         std::cerr << "No se pudo abrir el archivo 1" << std::endl;
         return ;
@@ -661,19 +811,18 @@ void guardar_Comprimido(EstadoJuego partida) {
     while (getline(archivo, linea)) {
 
         int tamano = linea.size();
-        char caracteres[tamano + 1];
-         linea.copy(caracteres, tamano);
-        caracteres[tamano] = '\0';
+        char charArray[tamano + 1];
+        linea.copy(charArray, tamano);
+        charArray[tamano + 1] = '\n';
 
-
-        for (int i = 0; i < tamano; i++) {
+        for (auto it : charArray) {
             bool flag = false;
-            int valor = static_cast<int>(caracteres[i]); // Convierte el carácter a valor ASCII
+            int valor = static_cast<int>(it); // Convierte el carácter a valor ASCII
 
-            for (auto it: queue) {
-                if (valor == it.getAscii()) {
+            for (auto it2: queue) {
+                if (valor == it2.getAscii()) {
                     flag = true;
-                    it.setFrec(it.getFrec() + 1);
+                    it2.setFrec(it2.getFrec() + 1);
                 }
             }
             if (!flag) {
@@ -690,6 +839,7 @@ void guardar_Comprimido(EstadoJuego partida) {
     for(auto it : queue){
         caracteres.push_front(pair<int,int>(it.getFrec(),it.getAscii()));
     }
+    //caracteres es una lista de pares, con su frecuencia y su ascii
 
     int n = queue.size();
 
@@ -711,7 +861,7 @@ void guardar_Comprimido(EstadoJuego partida) {
     archivobin.open("partida.bin", ios::binary | ios::out);
     if (archivobin.is_open()) {
 
-        short N = short(n);
+        short N = short(n);//lista de caracteres
         archivobin.write(reinterpret_cast<char *>(&N), sizeof(N));
 
         for (auto it: caracteres) {
@@ -721,7 +871,7 @@ void guardar_Comprimido(EstadoJuego partida) {
             archivobin.write(reinterpret_cast<char *>(&F), sizeof(F));
         }
 
-        long w = Hoffman.getFrec();
+        long w = Hoffman.getFrec();//cantidad de caracteres
 
         archivobin.write(reinterpret_cast<char *>(&w), sizeof(w));
 
@@ -732,36 +882,43 @@ void guardar_Comprimido(EstadoJuego partida) {
         }
 
         int cont = 0;
-        while (getline(archivo, linea)) {
+        string secuenciaBinaria = "";
+        while (getline(archivo2, linea)) {
 
             int tamano = linea.size();
-            char caracteres[tamano + 1];
-            linea.copy(caracteres, tamano);
-            caracteres[tamano + 1] = '\0';
+            char charArray[tamano+ 1 ];
+            linea.copy(charArray, tamano);
+            charArray[tamano + 1] = '\n';
 
-            for (int i = 0; i < tamano; i++) {
-                int valor = static_cast<int>(caracteres[i]);
+            for (auto it : charArray) {
+                int valor = static_cast<int>(it);
 
-                list<int> inicial = {};
+                list<int> secuencia = {};
+                buscarSecuencia(valor, Hoffman, secuencia);
 
-                list<int> secuencia = buscarSecuencia(valor, Hoffman, inicial);
-
-                for (int it: secuencia) {
-                    char c = static_cast<unsigned char >(it & 0xFF);
-                    archivobin.write(reinterpret_cast<char *>(&c), sizeof(c));
-                    cont ++;
-                }
-
+                for (int it2: secuencia)
+                    secuenciaBinaria += std::to_string(it2);
             }
         }
 
-        while (cont % 8 != 0) {
-            int cero = 0;
-            char c = static_cast<unsigned char >(cero & 0xFF);
-            archivobin.write(reinterpret_cast<char *>(&c), sizeof(c));
-            cont++;
+        int modulo = secuenciaBinaria.length() % 8;
+        if(modulo != 0){
+            int llenar = 8-modulo;
+            secuenciaBinaria += string(llenar,'0');
         }
-
+        char byte = 0;
+        cont = 0;
+        for (auto it : secuenciaBinaria) {
+            if (it == '1') {
+                byte |= 1 << (7 - cont);
+            }
+            cont++;
+            if (cont == 8) {
+                cont = 0;
+                archivobin.put(byte);
+                byte = 0;
+            }
+        }
         cout << "guardar binario succesful" << endl;
     }else{
         cout << "no se pudo abrir archivo bianrio" << endl;

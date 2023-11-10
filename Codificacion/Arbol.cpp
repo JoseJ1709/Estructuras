@@ -49,13 +49,17 @@ void Arbol::setDer(Arbol der) {
     raiz->setDer(der.raiz);
 }
 bool Arbol::esta(int ascii) {
-    if(this->getAscii()==ascii){
-        return true;
-    }else if(this->isEmpty()){
+    if(this->isEmpty()){
         return false;
+    }else if(this->getAscii()==ascii){
+        return true;
     }else{
         bool izq = this->getIzq().esta(ascii);
+        if(izq)
+            return true;
         bool der = this->getDer().esta(ascii);
-        return  izq || der;
+        if(der)
+            return true;
+        return false;
     }
 };
